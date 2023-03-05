@@ -1,0 +1,9 @@
+
+pip install virtualenv
+mkdir Environments
+cd Environments
+virtualenv envir_name
+envir_name\Scripts\activate.bat
+
+
+Video Thumb 29.00
