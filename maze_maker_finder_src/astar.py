@@ -15,7 +15,9 @@ WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
 PURPLE = (128, 0, 128)
 ORANGE = (255, 165, 0)
+LIGHT_GREY = (204, 204, 204)
 GREY = (128, 128, 128)
+DARK_GREY = (104, 104, 104)
 TURQUOISE = (64, 224, 208)
 
 def menu():
@@ -71,10 +73,10 @@ class Spot:
         return self.row, self.col
 
     def is_closed(self):
-        return self.color == RED
+        return self.color == LIGHT_GREY
 
     def is_open(self):
-        return self.color == GREEN
+        return self.color == DARK_GREY
 
     def is_barrier(self):
         return self.color == BLACK
@@ -83,28 +85,28 @@ class Spot:
         self.color = WHITE
 
     def is_start(self):
-        return self.color == ORANGE
+        return self.color == RED
 
     def is_end(self):
-        return self.color == TURQUOISE
+        return self.color == BLUE
 
     def make_closed(self):
-        self.color = RED
+        self.color = LIGHT_GREY
 
     def make_open(self):
-        self.color = GREEN
+        self.color = DARK_GREY
 
     def make_barrier(self):
         self.color = BLACK
 
     def make_start(self):
-        self.color = ORANGE
+        self.color = RED
 
     def make_end(self):
-        self.color = TURQUOISE
+        self.color = BLUE
 
     def make_path(self):
-        self.color = PURPLE
+        self.color = GREEN
 
     def draw(self, win):
         pygame.draw.rect(
@@ -224,6 +226,32 @@ def get_clicked_pos(pos, rows, width):
 
     return row, col
 
+def save_maze(grid, filename):
+    with open(filename, 'w') as f:
+        for row in grid:
+            for spot in row:
+                if spot.is_barrier():
+                    f.write('1')
+                elif spot.is_start():
+                    f.write('S')
+                elif spot.is_end():
+                    f.write('E')
+                else:
+                    f.write('0')
+            f.write('\n')
+
+
+def load_maze(filename, grid):
+    with open(filename, 'r') as f:
+        for y, line in enumerate(f):
+            for x, char in enumerate(line.strip()):
+                if char == '1':
+                    grid[y][x].make_barrier()
+                elif char == 'S':
+                    grid[y][x].make_start()
+                elif char == 'E':
+                    grid[y][x].make_end()
+
 
 def main(win, width):
     ROWS = 50
@@ -276,7 +304,10 @@ def main(win, width):
                     start = None
                     end = None
                     grid = make_grid(ROWS, width)
-
+                if event.key == pygame.K_s:
+                    save_maze(grid,'maze.txt')
+                if event.key == pygame.K_l:
+                    load_maze('maze.txt', grid)
     pygame.quit()
 
 
