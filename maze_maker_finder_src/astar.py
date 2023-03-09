@@ -18,6 +18,43 @@ ORANGE = (255, 165, 0)
 GREY = (128, 128, 128)
 TURQUOISE = (64, 224, 208)
 
+def menu():
+    pygame.init()
+    menu_font = pygame.font.SysFont('calibri', 60)
+    menu_text = menu_font.render('Maze Maker', True, WHITE)
+    start_text = menu_font.render('Start Game', True, WHITE)
+    quit_text = menu_font.render('Quit Game', True, WHITE)
+
+    # Position the menu items
+    menu_text_rect = menu_text.get_rect(center=(WIDTH//2, WIDTH//4))
+    start_text_rect = start_text.get_rect(center=(WIDTH//2, WIDTH//2))
+    quit_text_rect = quit_text.get_rect(center=(WIDTH//2, WIDTH*3//4))
+
+    # Create a new window for the menu
+    menu_window = pygame.display.set_mode((WIDTH, WIDTH))
+
+    while True:
+        menu_window.fill(BLACK)
+        menu_window.blit(menu_text, menu_text_rect)
+        menu_window.blit(start_text, start_text_rect)
+        menu_window.blit(quit_text, quit_text_rect)
+        pygame.display.update()
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                quit()
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                mouse_pos = pygame.mouse.get_pos()
+                if start_text_rect.collidepoint(mouse_pos):
+                    # Start the game
+                    return
+                elif quit_text_rect.collidepoint(mouse_pos):
+                    # Quit the game
+                    pygame.quit()
+                    quit()
+
+menu()
 
 class Spot:
     def __init__(self, row, col, width, total_rows):
