@@ -6,6 +6,7 @@ from tkinter import filedialog
 root = tk.Tk()
 root.withdraw()
 import math
+from collections import deque
 from queue import PriorityQueue
 
 pygame.init()
@@ -145,20 +146,162 @@ class Spot:
         return False
 
 
-def h(p1, p2):  # heuristic function for manhattan distance
+def L1(p1, p2):  # heuristic function for manhattan distance
     x1, y1 = p1
     x2, y2 = p2
     return abs(x1-x2)+abs(y1-y2)
 
+def L2(p1, p2):  # heuristic function for euclidean distance
+    x1, y1 = p1
+    x2, y2 = p2
+    return math.sqrt(math.pow(x1 - x2, 2) + math.pow(y1 - y2, 2))
+
+def is_solution_path(came_from, current):
+    while current in came_from:
+        current = came_from[current]
+        if current.is_start():
+            return True
+        current.make_path()
+    return False
 
 def reconstruct_path(came_from, current, draw):
     while(current in came_from):
         current = came_from[current]
+        current.is_solution_path = True
         current.make_path()
         draw()
 
 
-def algorithm(draw, grid, start, end):
+def DFS(draw, grid, start, end):
+    stack = [start]
+    visited = {start}
+    came_from = {}
+    while stack:
+        current = stack.pop()
+        if current == end:
+            reconstruct_path(came_from, end, draw)
+            end.make_end()
+            start.make_start()
+            return True
+
+        for neighbor in current.neighbors:
+            if neighbor not in visited:
+                came_from[neighbor] = current
+                visited.add(neighbor)
+                stack.append(neighbor)
+                neighbor.make_open()
+        
+        draw()
+        if current != start:
+            current.make_closed()
+
+    return False
+
+def BFS(draw, grid, start, end):
+    queue = deque([start])
+    visited = {start}
+    came_from = {}
+    
+    while queue:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+        
+        current = queue.popleft()
+
+        if current == end:
+            reconstruct_path(came_from, end, draw)
+            end.make_end()
+            start.make_start()
+            return True
+        
+        for neighbor in current.neighbors:
+            if neighbor not in visited:
+                visited.add(neighbor)
+                queue.append(neighbor)
+                came_from[neighbor] = current
+                neighbor.make_open()
+        
+        draw()
+        
+        if current != start:
+            current.make_closed()
+        
+    return False
+
+def GRD_L1(draw, grid, start, end):
+    count = 0
+    open_set = PriorityQueue()
+    open_set.put((0, count, start))
+    came_from = {}
+    f_score = {spot: float('inf') for row in grid for spot in row}
+    f_score[start] = L1(start.get_pos(), end.get_pos())
+
+    while not open_set.empty():
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+        current = open_set.get()[2]
+
+        if current == end:
+            reconstruct_path(came_from, end, draw)
+            end.make_end()
+            start.make_start()
+            return True
+
+        for neighbor in current.neighbors:
+            temp_f_score = L1(neighbor.get_pos(), end.get_pos())
+            if temp_f_score < f_score[neighbor]:
+                came_from[neighbor] = current
+                f_score[neighbor] = temp_f_score
+                if neighbor not in open_set.queue:
+                    count += 1
+                    open_set.put((f_score[neighbor], count, neighbor))
+                    neighbor.make_open()
+
+        draw()
+        if current != start:
+            current.make_closed()
+
+    return False
+
+def GRD_L2(draw, grid, start, end):
+    count = 0
+    open_set = PriorityQueue()
+    open_set.put((0, count, start))
+    came_from = {}
+    f_score = {spot: float('inf') for row in grid for spot in row}
+    f_score[start] = L2(start.get_pos(), end.get_pos())
+
+    while not open_set.empty():
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+        current = open_set.get()[2]
+
+        if current == end:
+            reconstruct_path(came_from, end, draw)
+            end.make_end()
+            start.make_start()
+            return True
+
+        for neighbor in current.neighbors:
+            temp_f_score = L2(neighbor.get_pos(), end.get_pos())
+            if temp_f_score < f_score[neighbor]:
+                came_from[neighbor] = current
+                f_score[neighbor] = temp_f_score
+                if neighbor not in open_set.queue:
+                    count += 1
+                    open_set.put((f_score[neighbor], count, neighbor))
+                    neighbor.make_open()
+
+        draw()
+        if current != start:
+            current.make_closed()
+
+    return False
+
+def AST_L1(draw, grid, start, end):
     count = 0
     open_set = PriorityQueue()
     open_set.put((0, count, start))
@@ -166,7 +309,7 @@ def algorithm(draw, grid, start, end):
     g_score = {spot: float('inf') for row in grid for spot in row}
     g_score[start] = 0
     f_score = {spot: float('inf') for row in grid for spot in row}
-    f_score[start] = h(start.get_pos(), end.get_pos())
+    f_score[start] = L1(start.get_pos(), end.get_pos())
     open_set_hash = {start}
     while not open_set.empty():
         for event in pygame.event.get():
@@ -186,7 +329,48 @@ def algorithm(draw, grid, start, end):
                 came_from[neighbor] = current
                 g_score[neighbor] = temp_g_score
                 f_score[neighbor] = temp_g_score + \
-                    h(neighbor.get_pos(), end.get_pos())
+                    L1(neighbor.get_pos(), end.get_pos())
+                if neighbor not in open_set_hash:
+                    count += 1
+                    open_set.put((f_score[neighbor], count, neighbor))
+                    open_set_hash.add(neighbor)
+                    neighbor.make_open()
+
+        draw()
+        if current != start:
+            current.make_closed()
+
+    return False
+
+def AST_L2(draw, grid, start, end):
+    count = 0
+    open_set = PriorityQueue()
+    open_set.put((0, count, start))
+    came_from = {}
+    g_score = {spot: float('inf') for row in grid for spot in row}
+    g_score[start] = 0
+    f_score = {spot: float('inf') for row in grid for spot in row}
+    f_score[start] = L2(start.get_pos(), end.get_pos())
+    open_set_hash = {start}
+    while not open_set.empty():
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+        current = open_set.get()[2]
+        open_set_hash.remove(current)
+
+        if current == end:
+            reconstruct_path(came_from, end, draw)
+            end.make_end()
+            start.make_start()
+            return True
+        for neighbor in current.neighbors:
+            temp_g_score = g_score[current]+1
+            if temp_g_score < g_score[neighbor]:
+                came_from[neighbor] = current
+                g_score[neighbor] = temp_g_score
+                f_score[neighbor] = temp_g_score + \
+                    L2(neighbor.get_pos(), end.get_pos())
                 if neighbor not in open_set_hash:
                     count += 1
                     open_set.put((f_score[neighbor], count, neighbor))
@@ -207,6 +391,7 @@ def make_grid(rows, width):  # total width here
         grid.append([])
         for j in range(rows):
             spot = Spot(i, j, gap, rows)
+            spot.is_solution_path = False
             grid[i].append(spot)
     return grid
 
@@ -282,6 +467,7 @@ def main(win, width):
 
     start = None
     end = None
+    clear_count = 0
     run = True
     started = False
 
@@ -317,16 +503,59 @@ def main(win, width):
                 if spot == end:
                     end = None
             if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_SPACE and start and end:
+                if event.key == pygame.K_1 and start and end:
                     for row in grid:
                         for spot in row:
                             spot.update_neighbors(grid)
-                    algorithm(lambda: draw(win, grid, ROWS, width),
+                    DFS(lambda: draw(win, grid, ROWS, width),
                               grid, start, end)
+                if event.key == pygame.K_2 and start and end:
+                    for row in grid:
+                        for spot in row:
+                            spot.update_neighbors(grid)
+                    BFS(lambda: draw(win, grid, ROWS, width),
+                              grid, start, end)
+                if event.key == pygame.K_3 and start and end:
+                    for row in grid:
+                        for spot in row:
+                            spot.update_neighbors(grid)
+                    GRD_L1(lambda: draw(win, grid, ROWS, width),
+                              grid, start, end)
+                if event.key == pygame.K_4 and start and end:
+                    for row in grid:
+                        for spot in row:
+                            spot.update_neighbors(grid)
+                    GRD_L2(lambda: draw(win, grid, ROWS, width),
+                              grid, start, end)
+                if event.key == pygame.K_5 and start and end:
+                    for row in grid:
+                        for spot in row:
+                            spot.update_neighbors(grid)
+                    AST_L1(lambda: draw(win, grid, ROWS, width),
+                              grid, start, end)
+                if event.key == pygame.K_6 and start and end:
+                    for row in grid:
+                        for spot in row:
+                            spot.update_neighbors(grid)
+                    AST_L2(lambda: draw(win, grid, ROWS, width),
+                              grid, start, end)
+
                 if event.key == pygame.K_c:
-                    start = None
-                    end = None
-                    grid = make_grid(ROWS, width)
+                    for row in grid:
+                        for spot in row:
+                            if not spot.is_barrier() and not spot.is_start() and not spot.is_end():
+                                spot.reset()
+                                spot.color = WHITE
+                    start.make_start()
+                    end.make_end()
+                    clear_count
+                
+                if event.key == pygame.K_e:    
+                        start = None
+                        end = None
+                        grid = make_grid(ROWS, width)
+                        clear_count = 0
+
                 if event.key == pygame.K_s:
                     save_maze(grid)
                 if event.key == pygame.K_l:
