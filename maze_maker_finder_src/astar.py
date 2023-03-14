@@ -1,6 +1,10 @@
 from threading import current_thread
 import pygame
 import pygame.freetype
+import tkinter as tk
+from tkinter import filedialog
+root = tk.Tk()
+root.withdraw()
 import math
 from queue import PriorityQueue
 
@@ -235,22 +239,25 @@ def get_clicked_pos(pos, rows, width):
 
     return row, col
 
-def save_maze(grid, filename):
-    with open(filename, 'w') as f:
-        for row in grid:
-            for spot in row:
-                if spot.is_barrier():
-                    f.write('1')
-                elif spot.is_start():
-                    f.write('S')
-                elif spot.is_end():
-                    f.write('E')
-                else:
-                    f.write('0')
-            f.write('\n')
+def save_maze(grid):
+    filename = filedialog.asksaveasfilename(defaultextension=".txt")
+    if filename:
+        with open(filename, 'w') as f:
+            for row in grid:
+                for spot in row:
+                    if spot.is_barrier():
+                        f.write('1')
+                    elif spot.is_start():
+                        f.write('S')
+                    elif spot.is_end():
+                        f.write('E')
+                    else:
+                        f.write('0')
+                f.write('\n')
 
 
 def load_maze(filename, grid):
+      
     with open(filename, 'r') as f:
         text = f.read()
         text = text.strip().split('\n')
@@ -321,9 +328,16 @@ def main(win, width):
                     end = None
                     grid = make_grid(ROWS, width)
                 if event.key == pygame.K_s:
-                    save_maze(grid,'maze.txt')
+                    save_maze(grid)
                 if event.key == pygame.K_l:
-                    start, end = load_maze('maze.txt', grid)
+                    filename = filedialog.askopenfilename(initialdir="./", title="Select file",
+                                          filetypes=(("text files", "*.txt"), ("all files", "*.*")))
+                    
+                    if filename:
+                        try:
+                            start, end = load_maze(filename, grid)
+                        except ValueError as e:
+                            tk.messagebox.showerror("Error", str(e))
 
 
 main(WIN, WIDTH)
