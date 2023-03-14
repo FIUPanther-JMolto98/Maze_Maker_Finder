@@ -1,11 +1,15 @@
 from threading import current_thread
 import pygame
+import pygame.freetype
 import math
 from queue import PriorityQueue
+
+pygame.init()
 
 WIDTH = 800
 WIN = pygame.display.set_mode((WIDTH, WIDTH))
 pygame.display.set_caption('A* Path finding Algorithm')
+font = pygame.freetype.SysFont('calibri', 6)
 
 RED = (255, 0, 0)
 GREEN = (0, 255, 0)
@@ -21,7 +25,6 @@ DARK_GREY = (104, 104, 104)
 TURQUOISE = (64, 224, 208)
 
 def menu():
-    pygame.init()
     menu_font = pygame.font.SysFont('calibri', 60)
     menu_text = menu_font.render('Maze Maker', True, WHITE)
     start_text = menu_font.render('Start Game', True, WHITE)
@@ -57,6 +60,12 @@ def menu():
                     quit()
 
 menu()
+
+def display_error(win, width, message):
+    font = pygame.font.SysFont('comicsans', 50)
+    text = font.render(message, True, (255, 0, 0))
+    win.blit(text, (width // 2 - text.get_width() // 2, width // 2 - text.get_height() // 2))
+    pygame.display.update()
 
 class Spot:
     def __init__(self, row, col, width, total_rows):
@@ -243,14 +252,21 @@ def save_maze(grid, filename):
 
 def load_maze(filename, grid):
     with open(filename, 'r') as f:
-        for y, line in enumerate(f):
-            for x, char in enumerate(line.strip()):
-                if char == '1':
-                    grid[y][x].make_barrier()
-                elif char == 'S':
-                    grid[y][x].make_start()
-                elif char == 'E':
-                    grid[y][x].make_end()
+        text = f.read()
+        text = text.strip().split('\n')
+        start = None
+        end = None
+        for y, row in enumerate(text):
+                for x, char in enumerate(row):
+                    if char == '1':
+                        grid[y][x].make_barrier()
+                    elif char == 'S':
+                        grid[y][x].make_start()
+                        start = grid[y][x]
+                    elif char == 'E':
+                        grid[y][x].make_end()
+                        end = grid[y][x]
+    return start, end
 
 
 def main(win, width):
@@ -307,8 +323,7 @@ def main(win, width):
                 if event.key == pygame.K_s:
                     save_maze(grid,'maze.txt')
                 if event.key == pygame.K_l:
-                    load_maze('maze.txt', grid)
-    pygame.quit()
+                    start, end = load_maze('maze.txt', grid)
 
 
 main(WIN, WIDTH)
