@@ -6,6 +6,7 @@ from tkinter import filedialog
 root = tk.Tk()
 root.withdraw()
 import math
+import random
 from collections import deque
 from queue import PriorityQueue
 
@@ -395,6 +396,22 @@ def make_grid(rows, width):  # total width here
             grid[i].append(spot)
     return grid
 
+def generate_random_maze(rows, width):
+    grid = make_grid(rows, width)
+    for row in grid:
+        for spot in row:
+            if random.random() < 0.3:
+                spot.make_barrier()
+
+    start = random.choice(random.choice(grid))
+    start.make_start()
+
+    end = random.choice(random.choice(grid))
+    while end == start:
+        end = random.choice(random.choice(grid))
+    end.make_end()
+    
+    return start, end, grid
 
 def draw_grid(win, rows, width):
     gap = width//rows
@@ -503,6 +520,8 @@ def main(win, width):
                 if spot == end:
                     end = None
             if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_r:
+                    start, end, grid = generate_random_maze(ROWS, width)
                 if event.key == pygame.K_1 and start and end:
                     for row in grid:
                         for spot in row:
