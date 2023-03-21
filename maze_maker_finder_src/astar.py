@@ -58,10 +58,8 @@ def menu():
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 mouse_pos = pygame.mouse.get_pos()
                 if start_text_rect.collidepoint(mouse_pos):
-                    # Start the game
                     return
                 elif quit_text_rect.collidepoint(mouse_pos):
-                    # Quit the game
                     pygame.quit()
                     quit()
 
@@ -133,14 +131,14 @@ class Spot:
         if self.row < self.total_rows-1 and not grid[self.row+1][self.col].is_barrier():
             self.neighbors.append(grid[self.row+1][self.col])
 
-        if self.row > 0 and not grid[self.row-1][self.col].is_barrier():  # up
+        if self.row > 0 and not grid[self.row-1][self.col].is_barrier():
             self.neighbors.append(grid[self.row-1][self.col])
 
 
         if self.col < self.total_rows-1 and not grid[self.row][self.col+1].is_barrier():
             self.neighbors.append(grid[self.row][self.col+1])
 
-        if self.col > 0 and not grid[self.row][self.col-1].is_barrier():  # left
+        if self.col > 0 and not grid[self.row][self.col-1].is_barrier():
             self.neighbors.append(grid[self.row][self.col-1])
 
     def __lt__(self, other):
