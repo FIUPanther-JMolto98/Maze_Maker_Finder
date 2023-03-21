@@ -36,12 +36,12 @@ def menu():
     start_text = menu_font.render('Start Game', True, WHITE)
     quit_text = menu_font.render('Quit Game', True, WHITE)
 
-    # Position the menu items
+
     menu_text_rect = menu_text.get_rect(center=(WIDTH//2, WIDTH//4))
     start_text_rect = start_text.get_rect(center=(WIDTH//2, WIDTH//2))
     quit_text_rect = quit_text.get_rect(center=(WIDTH//2, WIDTH*3//4))
 
-    # Create a new window for the menu
+
     menu_window = pygame.display.set_mode((WIDTH, WIDTH))
 
     while True:
@@ -129,14 +129,14 @@ class Spot:
 
     def update_neighbors(self, grid):
         self.neighbors = []
-        # down
+
         if self.row < self.total_rows-1 and not grid[self.row+1][self.col].is_barrier():
             self.neighbors.append(grid[self.row+1][self.col])
 
         if self.row > 0 and not grid[self.row-1][self.col].is_barrier():  # up
             self.neighbors.append(grid[self.row-1][self.col])
 
-        # right
+
         if self.col < self.total_rows-1 and not grid[self.row][self.col+1].is_barrier():
             self.neighbors.append(grid[self.row][self.col+1])
 
@@ -147,12 +147,12 @@ class Spot:
         return False
 
 
-def L1(p1, p2):  # heuristic function for manhattan distance
+def L1(p1, p2):  #heuristic function for manhattan distance
     x1, y1 = p1
     x2, y2 = p2
     return abs(x1-x2)+abs(y1-y2)
 
-def L2(p1, p2):  # heuristic function for euclidean distance
+def L2(p1, p2):  #heuristic function for euclidean distance
     x1, y1 = p1
     x2, y2 = p2
     return math.sqrt(math.pow(x1 - x2, 2) + math.pow(y1 - y2, 2))
@@ -385,9 +385,9 @@ def AST_L2(draw, grid, start, end):
     return False
 
 
-def make_grid(rows, width):  # total width here
+def make_grid(rows, width):
     grid = []
-    gap = width//rows  # width of each spot
+    gap = width//rows
     for i in range(rows):
         grid.append([])
         for j in range(rows):
@@ -417,13 +417,13 @@ def draw_grid(win, rows, width):
     gap = width//rows
     for i in range(rows):
         pygame.draw.line(win, GREY, (0, i*gap),
-                         (width, i*gap))  # drawing ROW lines
+                         (width, i*gap))
         for i in range(rows):
             pygame.draw.line(win, GREY, (i*gap, 0),
-                             (i*gap, width))  # drawing COL lines
+                             (i*gap, width))
 
 
-def draw(win, grid, rows, width):  # xommand to draw everything on display
+def draw(win, grid, rows, width):
     win.fill(WHITE)
     for row in grid:
         for spot in row:
@@ -493,7 +493,7 @@ def main(win, width):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 run = False
-            # [0]==Left click [2]==right click
+
             if pygame.mouse.get_pressed()[0]:
                 pos = pygame.mouse.get_pos()
                 row, col = get_clicked_pos(pos, ROWS, width)
