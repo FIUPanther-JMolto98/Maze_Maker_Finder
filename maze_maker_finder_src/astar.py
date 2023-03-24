@@ -14,6 +14,7 @@ from queue import PriorityQueue
 pygame.init()
 
 WIDTH = 800
+# HEIGHT = 800 + 60
 WIN = pygame.display.set_mode((WIDTH, WIDTH))
 pygame.display.set_caption('A* Path finding Algorithm')
 font = pygame.freetype.SysFont('calibri', 6)
@@ -383,7 +384,6 @@ def AST_L2(draw, grid, start, end):
 
     return False
 
-
 def make_grid(rows, width):
     grid = []
     gap = width//rows
@@ -412,47 +412,32 @@ def generate_random_maze(rows, width):
     
     return start, end, grid
 
-def draw_grid(win, rows, width):
-    gap = width//rows
+def draw_grid(win, rows, width, height):
+    gap = width // rows
     for i in range(rows):
-        pygame.draw.line(win, GREY, (0, i*gap),
-                         (width, i*gap))
+        pygame.draw.line(win, GREY, (0, i * gap), (width, i * gap))
         for i in range(rows):
-            pygame.draw.line(win, GREY, (i*gap, 0),
-                             (i*gap, width))
-
+            pygame.draw.line(win, GREY, (i * gap, 0), (i * gap, height))
 
 def draw(win, grid, rows, width):
-    win.fill(WHITE)
+    grid_area = pygame.Rect(0, 0, width, width)
+    pygame.draw.rect(win, WHITE, grid_area)
+    
     for row in grid:
         for spot in row:
             spot.draw(win)
 
-    draw_grid(win, rows, width)
+    draw_grid(win, rows, width, width)  # Pass width as the height parameter
     pygame.display.update()
 
 
-
-def get_clicked_pos(event, rows, width):
+def get_clicked_pos(pos, rows, width):
     gap = width//rows
-    row = event.y // gap
-    col = event.x // gap
-    
+    y, x = pos
+    row = y//gap
+    col = x//gap
+
     return row, col
-
-def handle_mouse_click(event, canvas, grid, rows, width, start, end):
-    row, col = get_clicked_pos(event, rows, width)
-    spot = grid[row][col]
-    if not start and spot != end:
-        start = spot
-        start.make_start()
-    elif not end and spot != start:
-        end = spot
-        end.make_end()
-    elif spot != end and spot != start:
-        spot.make_barrier()
-    draw(canvas, grid, rows, width)
-
 
 def save_maze(grid):
     filename = filedialog.asksaveasfilename(defaultextension=".txt")
@@ -515,6 +500,21 @@ def erase_grid(grid,start,end):
     grid = make_grid(ROWS, width)
     return grid,start,end
 
+# def draw_buttons(win,width):
+#     button_font = pygame.font.SysFont('arial', 20)
+#     clear_button_rect = pygame.Rect(20, width + 20, 100, 40)
+#     pygame.draw.rect(win, GREY, clear_button_rect, border_radius=5)
+#     clear_text = button_font.render('Clear Grid', True, BLACK)
+#     clear_text_rect = clear_text.get_rect(center=clear_button_rect.center)
+#     win.blit(clear_text, clear_text_rect)
+
+def handle_button_click(pos,width):
+    x, y = pos
+    if y > width + 20 and y < width + 60:
+        if x > 20 and x < 120:
+            return 'clear'
+    return None
+
 def main(win, width):
     ROWS = 50
     grid = make_grid(ROWS, width)
@@ -524,38 +524,10 @@ def main(win, width):
     run = True
     started = False
 
-    #create a Tkinter window
-    root = tk.Tk()
-    root.title("Pathfinding Visualizer")
-
-    #create buttons for some of the keydown events
-    # random_maze_button = tk.Button(root, text="Generate Random Maze", command=partial(generate_random_maze, ROWS, width))
-    # dfs_button = tk.Button(root, text="DFS", command=partial(DFS, lambda: draw(win, grid, ROWS, width), grid, start, end))
-    # bfs_button = tk.Button(root, text="BFS", command=partial(BFS, lambda: draw(win, grid, ROWS, width), grid, start, end))
-    # grd_l1_button = tk.Button(root, text="GRD_L1", command=partial(GRD_L1, lambda: draw(win, grid, ROWS, width), grid, start, end))
-    # grd_l2_button = tk.Button(root, text="GRD_L2", command=partial(GRD_L2, lambda: draw(win, grid, ROWS, width), grid, start, end))
-    # ast_l1_button = tk.Button(root, text="AST_L1", command=partial(AST_L1, lambda: draw(win, grid, ROWS, width), grid, start, end))
-    # ast_l2_button = tk.Button(root, text="AST_L2", command=partial(AST_L2, lambda: draw(win, grid, ROWS, width), grid, start, end))
-    # clear_button = tk.Button(root, text="Clear", command=partial(clear_grid, grid))
-    # save_button = tk.Button(root, text="Save Maze", command=partial(save_maze, grid))
-    # load_button = tk.Button(root, text="Load Maze", command=partial(load_maze, grid))
-    # quit_button = tk.Button(root, text="Quit", command=root.quit)
-
-    # pack the buttons into the window
-    # random_maze_button.pack(side="left")
-    # dfs_button.pack(side="left")
-    # bfs_button.pack(side="left")
-    # grd_l1_button.pack(side="left")
-    # grd_l2_button.pack(side="left")
-    # ast_l1_button.pack(side="left")
-    # ast_l2_button.pack(side="left")
-    # clear_button.pack(side="left")
-    # save_button.pack(side="left")
-    # load_button.pack(side="left")
-    # quit_button.pack(side="left")
-
     while run:
+        
         draw(win, grid, ROWS, width)
+        
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 run = False
@@ -585,6 +557,11 @@ def main(win, width):
                     start = None
                 if spot == end:
                     end = None
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                pos = pygame.mouse.get_pos()
+                button_clicked = handle_button_click(pos,width)
+                if button_clicked == 'clear':
+                    clear_grid(grid,start,end)
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_r:
                     start, end, grid = generate_random_maze(ROWS, width)
@@ -638,5 +615,6 @@ def main(win, width):
                     save_maze(grid)
                 if event.key == pygame.K_l:
                     start, end, grid = load_maze(grid)
-
+    draw_buttons(win, width)
+    pygame.display.update()
 main(WIN, WIDTH)
