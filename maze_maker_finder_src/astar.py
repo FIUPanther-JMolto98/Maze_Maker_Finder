@@ -3,6 +3,7 @@ import pygame
 import pygame.freetype
 import tkinter as tk
 from tkinter import filedialog
+from functools import partial
 root = tk.Tk()
 root.withdraw()
 import math
@@ -431,13 +432,27 @@ def draw(win, grid, rows, width):
     pygame.display.update()
 
 
-def get_clicked_pos(pos, rows, width):
-    gap = width//rows
-    y, x = pos
-    row = y//gap
-    col = x//gap
 
+def get_clicked_pos(event, rows, width):
+    gap = width//rows
+    row = event.y // gap
+    col = event.x // gap
+    
     return row, col
+
+def handle_mouse_click(event, canvas, grid, rows, width, start, end):
+    row, col = get_clicked_pos(event, rows, width)
+    spot = grid[row][col]
+    if not start and spot != end:
+        start = spot
+        start.make_start()
+    elif not end and spot != start:
+        end = spot
+        end.make_end()
+    elif spot != end and spot != start:
+        spot.make_barrier()
+    draw(canvas, grid, rows, width)
+
 
 def save_maze(grid):
     filename = filedialog.asksaveasfilename(defaultextension=".txt")
@@ -456,25 +471,49 @@ def save_maze(grid):
                 f.write('\n')
 
 
-def load_maze(filename, grid):
-      
+def load_maze(grid):
+    filename = filedialog.askopenfilename(initialdir="./", title="Select file",
+                                                          filetypes=(("text files", "*.txt"), ("all files", "*.*")))                   
+    if filename:
+        try:
+            start, end = load_maze_from_file(filename, grid)
+            return start, end, grid
+        except ValueError as e:
+            tk.messagebox.showerror("Error", str(e))
+
+def load_maze_from_file(filename, grid):
     with open(filename, 'r') as f:
         text = f.read()
         text = text.strip().split('\n')
         start = None
         end = None
         for y, row in enumerate(text):
-                for x, char in enumerate(row):
-                    if char == '1':
-                        grid[y][x].make_barrier()
-                    elif char == 'S':
-                        grid[y][x].make_start()
-                        start = grid[y][x]
-                    elif char == 'E':
-                        grid[y][x].make_end()
-                        end = grid[y][x]
+            for x, char in enumerate(row):
+                if char == '1':
+                    grid[y][x].make_barrier()
+                elif char == 'S':
+                    grid[y][x].make_start()
+                    start = grid[y][x]
+                elif char == 'E':
+                    grid[y][x].make_end()
+                    end = grid[y][x]
     return start, end
 
+def clear_grid(grid, start, end):
+    for row in grid:
+        for spot in row:
+            if not spot.is_barrier() and not spot.is_start() and not spot.is_end():
+                spot.reset()
+                spot.color = WHITE
+    start.make_start()
+    end.make_end()
+    return start,end,grid
+
+def erase_grid(grid,start,end):
+    start = None
+    end = None
+    grid = make_grid(ROWS, width)
+    return grid,start,end
 
 def main(win, width):
     ROWS = 50
@@ -482,9 +521,38 @@ def main(win, width):
 
     start = None
     end = None
-    clear_count = 0
     run = True
     started = False
+
+    #create a Tkinter window
+    root = tk.Tk()
+    root.title("Pathfinding Visualizer")
+
+    #create buttons for some of the keydown events
+    # random_maze_button = tk.Button(root, text="Generate Random Maze", command=partial(generate_random_maze, ROWS, width))
+    # dfs_button = tk.Button(root, text="DFS", command=partial(DFS, lambda: draw(win, grid, ROWS, width), grid, start, end))
+    # bfs_button = tk.Button(root, text="BFS", command=partial(BFS, lambda: draw(win, grid, ROWS, width), grid, start, end))
+    # grd_l1_button = tk.Button(root, text="GRD_L1", command=partial(GRD_L1, lambda: draw(win, grid, ROWS, width), grid, start, end))
+    # grd_l2_button = tk.Button(root, text="GRD_L2", command=partial(GRD_L2, lambda: draw(win, grid, ROWS, width), grid, start, end))
+    # ast_l1_button = tk.Button(root, text="AST_L1", command=partial(AST_L1, lambda: draw(win, grid, ROWS, width), grid, start, end))
+    # ast_l2_button = tk.Button(root, text="AST_L2", command=partial(AST_L2, lambda: draw(win, grid, ROWS, width), grid, start, end))
+    # clear_button = tk.Button(root, text="Clear", command=partial(clear_grid, grid))
+    # save_button = tk.Button(root, text="Save Maze", command=partial(save_maze, grid))
+    # load_button = tk.Button(root, text="Load Maze", command=partial(load_maze, grid))
+    # quit_button = tk.Button(root, text="Quit", command=root.quit)
+
+    # pack the buttons into the window
+    # random_maze_button.pack(side="left")
+    # dfs_button.pack(side="left")
+    # bfs_button.pack(side="left")
+    # grd_l1_button.pack(side="left")
+    # grd_l2_button.pack(side="left")
+    # ast_l1_button.pack(side="left")
+    # ast_l2_button.pack(side="left")
+    # clear_button.pack(side="left")
+    # save_button.pack(side="left")
+    # load_button.pack(side="left")
+    # quit_button.pack(side="left")
 
     while run:
         draw(win, grid, ROWS, width)
@@ -558,32 +626,17 @@ def main(win, width):
                               grid, start, end)
 
                 if event.key == pygame.K_c:
-                    for row in grid:
-                        for spot in row:
-                            if not spot.is_barrier() and not spot.is_start() and not spot.is_end():
-                                spot.reset()
-                                spot.color = WHITE
-                    start.make_start()
-                    end.make_end()
-                    clear_count
+                    if start and end != None:
+                        clear_grid(grid, start, end)
                 
                 if event.key == pygame.K_e:    
+                    if start and end != None:
                         start = None
                         end = None
                         grid = make_grid(ROWS, width)
-                        clear_count = 0
-
                 if event.key == pygame.K_s:
                     save_maze(grid)
                 if event.key == pygame.K_l:
-                    filename = filedialog.askopenfilename(initialdir="./", title="Select file",
-                                          filetypes=(("text files", "*.txt"), ("all files", "*.*")))
-                    
-                    if filename:
-                        try:
-                            start, end = load_maze(filename, grid)
-                        except ValueError as e:
-                            tk.messagebox.showerror("Error", str(e))
-
+                    start, end, grid = load_maze(grid)
 
 main(WIN, WIDTH)
