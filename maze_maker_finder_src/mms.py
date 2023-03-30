@@ -13,7 +13,7 @@ from queue import PriorityQueue
 
 pygame.init()
 
-WIDTH = 600
+WIDTH = 800
 # HEIGHT = 800 + 60
 WIN = pygame.display.set_mode((WIDTH, WIDTH))
 pygame.display.set_caption('Maze Maker Solver')
@@ -615,6 +615,5 @@ def main(win, width):
                     save_maze(grid)
                 if event.key == pygame.K_l:
                     start, end, grid = load_maze(grid)
-    draw_buttons(win, width)
     pygame.display.update()
 main(WIN, WIDTH)
