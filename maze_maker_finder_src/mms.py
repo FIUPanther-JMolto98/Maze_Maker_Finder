@@ -95,6 +95,9 @@ class Spot:
 
     def is_barrier(self):
         return self.color == BLACK
+    
+    def is_solution(self):
+        return self.color == GREEN
 
     def reset(self):
         self.color = WHITE
@@ -109,7 +112,31 @@ class Spot:
         self.color = LIGHT_GREY
 
     def make_open(self):
-        self.color = DARK_GREY
+        self.color = GREY
+        
+    def make_closed_DFS(self):
+        self.color = "#E67373"
+
+    def make_open_DFS(self):
+        self.color = "#E8A9A9"
+
+    def make_open_BFS(self):
+        self.color = "#A9C6E8"
+
+    def make_closed_BFS(self):
+        self.color = "#73ABE6"
+
+    def make_open_GRD(self):
+        self.color = "#BAE8A9"
+
+    def make_closed_GRD(self):
+        self.color = "#99E673"
+
+    def make_open_ASTR(self):
+        self.color = "#E8DFA9"
+
+    def make_closed_ASTR(self):
+        self.color = "#e6c973"
 
     def make_barrier(self):
         self.color = BLACK
@@ -174,6 +201,7 @@ def reconstruct_path(came_from, current, draw):
 
 
 def DFS(draw, grid, start, end):
+    clear_solution_path(grid, start, end)
     stack = [start]
     visited = {start}
     came_from = {}
@@ -190,15 +218,16 @@ def DFS(draw, grid, start, end):
                 came_from[neighbor] = current
                 visited.add(neighbor)
                 stack.append(neighbor)
-                neighbor.make_open()
+                neighbor.make_open_DFS()
         
         draw()
         if current != start:
-            current.make_closed()
+            current.make_closed_DFS()
 
     return False
 
 def BFS(draw, grid, start, end):
+    clear_solution_path(grid, start, end)
     queue = deque([start])
     visited = {start}
     came_from = {}
@@ -221,16 +250,17 @@ def BFS(draw, grid, start, end):
                 visited.add(neighbor)
                 queue.append(neighbor)
                 came_from[neighbor] = current
-                neighbor.make_open()
+                neighbor.make_open_BFS()
         
         draw()
         
         if current != start:
-            current.make_closed()
+            current.make_closed_BFS()
         
     return False
 
 def GRD_L1(draw, grid, start, end):
+    clear_solution_path(grid, start, end)
     count = 0
     open_set = PriorityQueue()
     open_set.put((0, count, start))
@@ -258,15 +288,16 @@ def GRD_L1(draw, grid, start, end):
                 if neighbor not in open_set.queue:
                     count += 1
                     open_set.put((f_score[neighbor], count, neighbor))
-                    neighbor.make_open()
+                    neighbor.make_open_GRD()
 
         draw()
         if current != start:
-            current.make_closed()
+            current.make_closed_GRD()
 
     return False
 
 def GRD_L2(draw, grid, start, end):
+    clear_solution_path(grid, start, end)
     count = 0
     open_set = PriorityQueue()
     open_set.put((0, count, start))
@@ -294,15 +325,16 @@ def GRD_L2(draw, grid, start, end):
                 if neighbor not in open_set.queue:
                     count += 1
                     open_set.put((f_score[neighbor], count, neighbor))
-                    neighbor.make_open()
+                    neighbor.make_open_GRD()
 
         draw()
         if current != start:
-            current.make_closed()
+            current.make_closed_GRD()
 
     return False
 
 def AST_L1(draw, grid, start, end):
+    clear_solution_path(grid, start, end)
     count = 0
     open_set = PriorityQueue()
     open_set.put((0, count, start))
@@ -335,15 +367,16 @@ def AST_L1(draw, grid, start, end):
                     count += 1
                     open_set.put((f_score[neighbor], count, neighbor))
                     open_set_hash.add(neighbor)
-                    neighbor.make_open()
+                    neighbor.make_open_ASTR()
 
         draw()
         if current != start:
-            current.make_closed()
+            current.make_closed_ASTR()
 
     return False
 
 def AST_L2(draw, grid, start, end):
+    clear_solution_path(grid, start, end)
     count = 0
     open_set = PriorityQueue()
     open_set.put((0, count, start))
@@ -376,11 +409,11 @@ def AST_L2(draw, grid, start, end):
                     count += 1
                     open_set.put((f_score[neighbor], count, neighbor))
                     open_set_hash.add(neighbor)
-                    neighbor.make_open()
+                    neighbor.make_open_ASTR()
 
         draw()
         if current != start:
-            current.make_closed()
+            current.make_closed_ASTR()
 
     return False
 
@@ -499,6 +532,16 @@ def erase_grid(grid,start,end):
     end = None
     grid = make_grid(ROWS, width)
     return grid,start,end
+
+def clear_solution_path(grid, start, end):
+    for row in grid:
+        for spot in row:
+            if spot.is_solution():
+                spot.reset()
+                spot.color = LIGHT_GREY
+    start.make_start()
+    end.make_end()
+    return start,end,grid
 
 # def draw_buttons(win,width):
 #     button_font = pygame.font.SysFont('arial', 20)
