@@ -17,7 +17,7 @@ WIDTH = 800
 # HEIGHT = 800 + 60
 WIN = pygame.display.set_mode((WIDTH, WIDTH))
 pygame.display.set_caption('Maze Maker Solver')
-font = pygame.freetype.SysFont('calibri', 6)
+font = pygame.freetype.SysFont('Calibri', 6)
 
 RED = (255, 0, 0)
 GREEN = (0, 255, 0)
@@ -33,7 +33,7 @@ DARK_GREY = (104, 104, 104)
 TURQUOISE = (64, 224, 208)
 
 def menu():
-    menu_font = pygame.font.SysFont('calibri', 60)
+    menu_font = pygame.font.SysFont('Impact', 60)
     menu_text = menu_font.render('Maze Maker Solver', True, WHITE)
     start_text = menu_font.render('Start Game', True, WHITE)
     quit_text = menu_font.render('Quit Game', True, WHITE)
