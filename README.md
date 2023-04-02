@@ -23,7 +23,6 @@ Our program consists of an interactive game in which the user is given a window 
   <br/>
   <img src="https://github.com/FIUPanther-JMolto98/Maze_Maker_Finder/blob/master/MMS%20-%20DFS.gif"/>
 </h1>
-<br/>
 
 <h1 align="center">
   <b> BFS - Breadth-First Search </b>
