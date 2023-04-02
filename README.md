@@ -4,13 +4,9 @@
 <b><ins>TEAM 10:</ins></b>
 
 Anthony Devesa
-
 David Martinez
-
 Joaquin Molto
-
 Jose Revilla
-
 Rahuul Rangaraj
 
 
