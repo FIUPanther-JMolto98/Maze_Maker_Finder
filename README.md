@@ -22,17 +22,17 @@ Our program consists of an interactive game in which the user is given a window 
 
   <b> DFS - DEPTH FIRST SEARCH </b>
 ![](https://github.com/FIUPanther-JMolto98/Maze_Maker_Finder/blob/master/MMS%20-%20DFS.gif)
-
+  <b> BFS - BREADTH FIRST SEARCH </b>
 ![](https://github.com/FIUPanther-JMolto98/Maze_Maker_Finder/blob/master/MMS%20-%20BFS.gif)
-
+  <b> GRD - GREEDY BEST-FIRST SEARCH L1 </b>
 ![](https://github.com/FIUPanther-JMolto98/Maze_Maker_Finder/blob/master/MMS%20-%20GRD_L1.gif)
-
+  <b> GRD - GREEDY BEST-FIRST SEARCH L2 </b>
 ![](https://github.com/FIUPanther-JMolto98/Maze_Maker_Finder/blob/master/MMS%20-%20GRD_L2.gif)
-
+  <b> AST - A* SEARCH L1 </b>
 ![](https://github.com/FIUPanther-JMolto98/Maze_Maker_Finder/blob/master/MMS%20-%20AST_L1.gif)
-
+  <b> AST - A* SEARCH L2 </b>
 ![](https://github.com/FIUPanther-JMolto98/Maze_Maker_Finder/blob/master/MMS%20-%20AST_L2.gif)
-
+  <b> BI_DFS - BIDIRECTIONAL BFS </b>
 ![](https://github.com/FIUPanther-JMolto98/Maze_Maker_Finder/blob/master/MMS%20-%20BI_DFS.gif)
 
 </h1>
