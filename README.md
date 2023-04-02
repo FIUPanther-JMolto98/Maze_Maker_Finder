@@ -1,7 +1,7 @@
 # (CAP4630/5602) FINAL PROJECT
 ## Maze_Maker_Finder 
 
-<b><u>TEAM 10:</u></b>
+<b><ins>TEAM 10:</ins></b>
 
 Anthony Devesa
 
