@@ -33,35 +33,35 @@ Our program consists of an interactive game in which the user is given a window 
 <br/>
 
 <h1 align="center">
-  <b> GRD_L1 - Greedy Best L1 Norm </b>
+  <b> GRD_L1 - Greedy Best First Search (L1 Norm) </b>
   <br/>
   <img src="https://github.com/FIUPanther-JMolto98/Maze_Maker_Finder/blob/master/MMS%20-%20GRD_L1.gif"/>
 </h1>
 <br/>
 
 <h1 align="center">
-  <b> GRD_L2 - Greedy Best L2 Norm </b>
+  <b> GRD_L2 - Greedy Best First Search (L2 Norm) </b>
   <br/>
   <img src="https://github.com/FIUPanther-JMolto98/Maze_Maker_Finder/blob/master/MMS%20-%20GRD_L2.gif"/>
 </h1>
 <br/>
 
 <h1 align="center">
-  <b> AST_L1 - A* L1 Norm </b>
+  <b> AST_L1 - A* (L1 Norm) </b>
   <br/>
   <img src="https://github.com/FIUPanther-JMolto98/Maze_Maker_Finder/blob/master/MMS%20-%20AST_L1.gif"/>
 </h1>
 <br/>
 
 <h1 align="center">
-  <b> AST_L2 - A* L2 Norm </b>
+  <b> AST_L2 - A* (L2 Norm) </b>
   <br/>
   <img src="https://github.com/FIUPanther-JMolto98/Maze_Maker_Finder/blob/master/MMS%20-%20AST_L2.gif"/>
 </h1>
 <br/>
 
 <h1 align="center">
-  <b> BI_DFS - Bidirectional Depth-First </b>
+  <b> BI_DFS - Bi-Directional Depth-First Search </b>
   <br/>
   <img src="https://github.com/FIUPanther-JMolto98/Maze_Maker_Finder/blob/master/MMS%20-%20BI_DFS.gif"/>
 </h1>
