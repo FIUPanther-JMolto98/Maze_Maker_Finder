@@ -20,5 +20,6 @@ Our program consists of an interactive game in which the user is given a window 
 
 <h1 align="center">
   <b> DFS - Depth-First Search </b>
+  <br/>
+  <img src="https://github.com/FIUPanther-JMolto98/Maze_Maker_Finder/blob/master/MMS%20-%20DFS.gif"/>
 </h1>
-  <img src="https://github.com/FIUPanther-JMolto98/Maze_Maker_Finder/blob/master/MMS%20-%20DFS.gif" class = "center"/>
