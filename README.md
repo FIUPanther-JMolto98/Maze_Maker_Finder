@@ -3,15 +3,15 @@
 
 <b><ins>TEAM 10:</ins></b>
 
-‣ Anthony Devesa
+‣Anthony Devesa
 
-‣ David Martinez
+‣David Martinez
 
-‣ Joaquin Molto
+‣Joaquin Molto
 
-‣ Jose Revilla
+‣Jose Revilla
 
-‣ Rahuul Rangaraj
+‣Rahuul Rangaraj
 
 <b>🟨This is our final project for Florida International University CAP4630/5602 - Introduction to Artificial Intelligence course:🟦</b> 
 
