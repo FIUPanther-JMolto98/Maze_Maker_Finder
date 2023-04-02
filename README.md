@@ -24,38 +24,38 @@ Our program consists of an interactive game in which the user is given a window 
   <img src="https://github.com/FIUPanther-JMolto98/Maze_Maker_Finder/blob/master/MMS%20-%20DFS.gif"/>
 </p>
 
-<h1 align="center">
+<p align="center">
   <b> BFS - Breadth-First Search </b>
   <br/>
   <img src="https://github.com/FIUPanther-JMolto98/Maze_Maker_Finder/blob/master/MMS%20-%20BFS.gif"/>
-</h1>
+</p>
 
-<h1 align="center">
+<p align="center">
   <b> GRD_L1 - Greedy Best First Search (L1 Norm) </b>
   <br/>
   <img src="https://github.com/FIUPanther-JMolto98/Maze_Maker_Finder/blob/master/MMS%20-%20GRD_L1.gif"/>
-</h1>
+</p>
 
-<h1 align="center">
+<p align="center">
   <b> GRD_L2 - Greedy Best First Search (L2 Norm) </b>
   <br/>
   <img src="https://github.com/FIUPanther-JMolto98/Maze_Maker_Finder/blob/master/MMS%20-%20GRD_L2.gif"/>
-</h1>
+</p>
 
-<h1 align="center">
+<p align="center">
   <b> AST_L1 - A* (L1 Norm) </b>
   <br/>
   <img src="https://github.com/FIUPanther-JMolto98/Maze_Maker_Finder/blob/master/MMS%20-%20AST_L1.gif"/>
-</h1>
+</p>
 
-<h1 align="center">
+<p align="center">
   <b> AST_L2 - A* (L2 Norm) </b>
   <br/>
   <img src="https://github.com/FIUPanther-JMolto98/Maze_Maker_Finder/blob/master/MMS%20-%20AST_L2.gif"/>
-</h1>
+</p>
 
-<h1 align="center">
+<p align="center">
   <b> BI_DFS - Bi-Directional Depth-First Search </b>
   <br/>
   <img src="https://github.com/FIUPanther-JMolto98/Maze_Maker_Finder/blob/master/MMS%20-%20BI_DFS.gif"/>
-</h1>
+</p>
