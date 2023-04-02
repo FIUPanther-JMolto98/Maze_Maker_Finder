@@ -10,6 +10,7 @@ import math
 import random
 from collections import deque
 from queue import PriorityQueue
+import heapq
 
 pygame.init()
 
@@ -120,6 +121,18 @@ class Spot:
     def make_open_DFS(self):
         self.color = "#E8A9A9"
 
+    def make_closed_BI_DFS_F(self):
+        self.color = "#E67373"
+
+    def make_open_BI_DFS_F(self):
+        self.color = "#E8A9A9"
+
+    def make_closed_BI_DFS_B(self):
+        self.color = "#A9C6E8"
+
+    def make_open_BI_DFS_B(self):
+        self.color = "#73ABE6"
+
     def make_open_BFS(self):
         self.color = "#A9C6E8"
 
@@ -131,12 +144,18 @@ class Spot:
 
     def make_closed_GRD(self):
         self.color = "#99E673"
-
+    
     def make_open_ASTR(self):
         self.color = "#E8DFA9"
 
     def make_closed_ASTR(self):
         self.color = "#e6c973"
+    
+    def make_open_DIJK(self):
+        self.color = "#E8A9CB"
+
+    def make_closed_DIJK(self):
+        self.color = "#E673BE" 
 
     def make_barrier(self):
         self.color = BLACK
@@ -198,7 +217,29 @@ def reconstruct_path(came_from, current, draw):
         current.is_solution_path = True
         current.make_path()
         draw()
+def reconstruct_path_bi(forward_came_from, backward_came_from, forward_intersection, backward_intersection, draw):
+    # Reconstruct the path from the start node to the forward_intersection point
+    current = forward_intersection
+    while current in forward_came_from:
+        current = forward_came_from[current]
+        current.is_solution_path = True
+        current.make_path()
+        draw()
 
+    # Reconstruct the path from the end node to the backward_intersection point
+    current = backward_intersection
+    while current in backward_came_from:
+        current = backward_came_from[current]
+        current.is_solution_path = True
+        current.make_path()
+        draw()
+
+    # Mark the intersection points as part of the solution path
+    forward_intersection.is_solution_path = True
+    forward_intersection.make_path()
+    backward_intersection.is_solution_path = True
+    backward_intersection.make_path()
+    draw()
 
 def DFS(draw, grid, start, end):
     clear_solution_path(grid, start, end)
@@ -223,6 +264,54 @@ def DFS(draw, grid, start, end):
         draw()
         if current != start:
             current.make_closed_DFS()
+
+    return False
+
+def BI_DFS(draw, grid, start, end):
+    clear_solution_path(grid, start, end)
+
+    forward_stack = [start]
+    forward_visited = {start}
+    forward_came_from = {}
+
+    backward_stack = [end]
+    backward_visited = {end}
+    backward_came_from = {}
+
+    while forward_stack and backward_stack:
+        forward_current = forward_stack.pop()
+        backward_current = backward_stack.pop()
+
+        for direction in [forward_current, backward_current]:
+            if direction == forward_current:
+                stack, visited, came_from, other_visited, other_came_from = forward_stack, forward_visited, forward_came_from, backward_visited, backward_came_from
+            else:
+                stack, visited, came_from, other_visited, other_came_from = backward_stack, backward_visited, backward_came_from, forward_visited, forward_came_from
+
+            for neighbor in direction.neighbors:
+                if neighbor not in visited:
+                    if neighbor in other_visited:
+                        # Reconstruct path when the two searches meet
+                        reconstruct_path_bi(forward_came_from, backward_came_from, direction, neighbor, draw)
+                        start.make_start()
+                        end.make_end()
+                        return True
+
+                    came_from[neighbor] = direction
+                    visited.add(neighbor)
+                    stack.append(neighbor)
+                    if direction == forward_current:
+                        neighbor.make_open_BI_DFS_F()
+                    elif direction == backward_current:
+                        neighbor.make_open_BI_DFS_B()
+
+        draw()
+
+        if forward_current != start:
+            forward_current.make_closed_BI_DFS_F()
+
+        if backward_current != end:
+            backward_current.make_closed_BI_DFS_B()
 
     return False
 
@@ -643,6 +732,12 @@ def main(win, width):
                         for spot in row:
                             spot.update_neighbors(grid)
                     AST_L2(lambda: draw(win, grid, ROWS, width),
+                              grid, start, end)                  
+                if event.key == pygame.K_7 and start and end:
+                    for row in grid:
+                        for spot in row:
+                            spot.update_neighbors(grid)
+                    BI_DFS(lambda: draw(win, grid, ROWS, width),
                               grid, start, end)
 
                 if event.key == pygame.K_c:
