@@ -769,7 +769,7 @@ def main(win, width, height):
                 border_color = (192, 115, 230)
             if button['label'] == 'CLEAR_SOL':
                 button_color = (0, 0, 0)
-                text = font.render(button['label'], True, (255, 255, 255))
+                text = font.render(button['label'], True, (255, 255, 0))
                 border_color = (0, 0, 0)
 
             button_rect = pygame.Rect(button['pos'], (button_width, button_height))
