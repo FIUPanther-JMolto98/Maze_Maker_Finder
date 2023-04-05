@@ -662,6 +662,7 @@ def main(win, width, height):
         button_width = 120
         button_rows = 3
         button_cols = 4
+        button_color = (0,0,0)
         border_color = (255,255,255)
         border_width = 2
 
@@ -669,7 +670,7 @@ def main(win, width, height):
         total_space = width - total_button_width
         padding = total_space // (button_cols + 1)
 
-        font = pygame.font.Font(None, 24)
+        font = pygame.font.SysFont('Consolas', 24)
 
         buttons = []
         
@@ -682,7 +683,7 @@ def main(win, width, height):
                 button_label = f"Button {i * button_cols + j + 1}"
                 button_action = f"button_{i * button_cols + j + 1}"
                 
-                buttons.append({'label': button_label, 'pos': (x, y), 'action': button_action, 'hover':False})
+                buttons.append({'label': button_label, 'pos': (x, y), 'action': button_action, 'color': button_color, 'hover':False})
 
         buttons[0]['label'] = 'SAVE'
         buttons[0]['action'] = 'save'
@@ -693,8 +694,8 @@ def main(win, width, height):
         buttons[2]['label'] = 'RANDOM'
         buttons[2]['action'] = 'random'
 
-        buttons[3]['label'] = 'WIPE'
-        buttons[3]['action'] = 'wipe'
+        buttons[3]['label'] = 'CLEAR_SOL'
+        buttons[3]['action'] = 'clear_sol'
 
         buttons[4]['label'] = 'DFS'
         buttons[4]['action'] = 'dfs'
@@ -717,49 +718,60 @@ def main(win, width, height):
         buttons[10]['label'] = 'BI_DFS'
         buttons[10]['action'] = 'bi_dfs'
 
-        buttons[11]['label'] = 'CLEAR_SOL'
-        buttons[11]['action'] = 'clear_sol'
+        buttons[11]['label'] = 'WIPE'
+        buttons[11]['action'] = 'wipe'
 
 
         for button in buttons:
             if button['label'] == 'SAVE':
                 button_color = (0, 0, 0)
                 text = font.render(button['label'], True, (255, 255, 255))
-                border_color = (255, 255, 255)
+                border_color = (0,0,0)
             if button['label'] == 'LOAD':
                 button_color = (0, 0, 0)
                 text = font.render(button['label'], True, (255, 255, 255))
+                border_color = (0,0,0)
             if button['label'] == 'RANDOM':
                 button_color = (0, 0, 0)
                 text = font.render(button['label'], True, (255, 255, 255))
+                border_color = (0,0,0)
             if button['label'] == 'WIPE':
                 button_color = (0, 0, 0)
-                text = font.render(button['label'], True, (255, 255, 255))
+                text = font.render(button['label'], True, (255, 255, 0))
+                border_color = (0,0,0)
             if button['label'] == 'DFS':
                 button_color = (0, 0, 0)
                 text = font.render(button['label'], True, (230, 115, 115))
+                border_color = (0, 0, 0)
             if button['label'] == 'BFS':
                 button_color = (0, 0, 0)
                 text = font.render(button['label'], True, (115, 171, 230))
+                border_color = (0, 0, 0)
             if button['label'] == 'GRD_L1':
                 button_color = (0, 0, 0)
                 text = font.render(button['label'], True, (153, 230, 115))
+                border_color = (0, 0, 0)
             if button['label'] == 'GRD_L2':
                 button_color = (0, 0, 0)
                 text = font.render(button['label'], True, (153, 230, 115))
+                border_color = (0, 0, 0)
             if button['label'] == 'AST_L1':
                 button_color = (0, 0, 0)
                 text = font.render(button['label'], True, (230, 201, 115))
+                border_color = (0, 0, 0)
             if button['label'] == 'AST_L2':
                 button_color = (0, 0, 0)
                 text = font.render(button['label'], True, (230, 201, 115))
+                border_color = (0, 0, 0)
             if button['label'] == 'BI_DFS':
                 button_color = (0, 0, 0)
                 text = font.render(button['label'], True, (192, 115, 230))
+                border_color = (0, 0, 0)
             if button['label'] == 'CLEAR_SOL':
                 button_color = (0,0,0)
                 text = font.render(button['label'], True, (255, 255, 255))
-            
+                border_color = (0,0,0)
+
             button_rect = pygame.Rect(button['pos'], (button_width, button_height))
             pygame.draw.rect(surface, border_color, button_rect, border_width)
             text_rect = text.get_rect(center=(button['pos'][0] + button_width // 2, button['pos'][1] + button_height // 2))
@@ -799,8 +811,8 @@ def main(win, width, height):
         buttons[2]['label'] = 'Random'
         buttons[2]['action'] = 'random'
 
-        buttons[3]['label'] = 'Wipe'
-        buttons[3]['action'] = 'wipe'
+        buttons[3]['label'] = 'CLEAR_SOL'
+        buttons[3]['action'] = 'clear_sol'
 
         buttons[4]['label'] = 'DFS'
         buttons[4]['action'] = 'dfs'
@@ -823,8 +835,8 @@ def main(win, width, height):
         buttons[10]['label'] = 'BI_DFS'
         buttons[10]['action'] = 'bi_dfs'
 
-        buttons[11]['label'] = 'Clear_Sol'
-        buttons[11]['action'] = 'clear_sol'
+        buttons[11]['label'] = 'WIPE'
+        buttons[11]['action'] = 'wipe'
 
         if pos[1] < width:
             return None
