@@ -670,7 +670,7 @@ def main(win, width, height):
         total_space = width - total_button_width
         padding = total_space // (button_cols + 1)
 
-        font = pygame.font.SysFont('Consolas', 24)
+        font = pygame.font.SysFont('Impact', 24)
 
         buttons = []
         
