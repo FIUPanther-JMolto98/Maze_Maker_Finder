@@ -14,9 +14,10 @@ import heapq
 
 pygame.init()
 
+HEIGHT = 1000
 WIDTH = 800
-# HEIGHT = 800 + 60
-WIN = pygame.display.set_mode((WIDTH, WIDTH))
+
+WIN = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption('Maze Maker Solver')
 font = pygame.freetype.SysFont('Calibri', 6)
 
@@ -40,12 +41,12 @@ def menu():
     quit_text = menu_font.render('Quit Game', True, WHITE)
 
 
-    menu_text_rect = menu_text.get_rect(center=(WIDTH//2, WIDTH//4))
-    start_text_rect = start_text.get_rect(center=(WIDTH//2, WIDTH//2))
-    quit_text_rect = quit_text.get_rect(center=(WIDTH//2, WIDTH*3//4))
+    menu_text_rect = menu_text.get_rect(center=(WIDTH//2, HEIGHT//4))
+    start_text_rect = start_text.get_rect(center=(WIDTH//2, HEIGHT//2))
+    quit_text_rect = quit_text.get_rect(center=(WIDTH//2, HEIGHT*3//4))
 
 
-    menu_window = pygame.display.set_mode((WIDTH, WIDTH))
+    menu_window = pygame.display.set_mode((WIDTH, HEIGHT))
 
     while True:
         menu_window.fill(BLACK)
@@ -647,7 +648,7 @@ def handle_button_click(pos,width):
             return 'clear'
     return None
 
-def main(win, width):
+def main(win, width, height):
     ROWS = 50
     grid = make_grid(ROWS, width)
 
@@ -656,83 +657,323 @@ def main(win, width):
     run = True
     started = False
 
+    def draw_buttons(surface, height):
+        button_height = 40
+        button_width = 120
+        button_rows = 3
+        button_cols = 4
+        
+        total_button_width = button_cols * button_width
+        total_space = width - total_button_width
+        padding = total_space // (button_cols + 1)
+
+        font = pygame.font.Font(None, 24)
+
+        buttons = []
+        
+        extra_padding = 20
+
+        for i in range(button_rows):
+            for j in range(button_cols):
+                x = padding + j * (button_width + padding)
+                y = padding - 30 + i * (button_height + 10)
+                button_label = f"Button {i * button_cols + j + 1}"
+                button_action = f"button_{i * button_cols + j + 1}"
+                
+                buttons.append({'label': button_label, 'pos': (x, y), 'action': button_action, 'hover':False})
+
+        buttons[0]['label'] = 'Save'
+        buttons[0]['action'] = 'save'
+
+        buttons[1]['label'] = 'Load'
+        buttons[1]['action'] = 'load'
+
+        buttons[2]['label'] = 'Random'
+        buttons[2]['action'] = 'random'
+
+        buttons[3]['label'] = 'Wipe'
+        buttons[3]['action'] = 'wipe'
+
+        buttons[4]['label'] = 'DFS'
+        buttons[4]['action'] = 'dfs'
+
+        buttons[5]['label'] = 'BFS'
+        buttons[5]['action'] = 'bfs'
+
+        buttons[6]['label'] = 'GRD_L1'
+        buttons[6]['action'] = 'grd_l1'
+
+        buttons[7]['label'] = 'GRD_L2'
+        buttons[7]['action'] = 'grd_l2'
+
+        buttons[8]['label'] = 'AST_L1'
+        buttons[8]['action'] = 'ast_l1'
+
+        buttons[9]['label'] = 'AST_L2'
+        buttons[9]['action'] = 'ast_l2'
+
+        buttons[10]['label'] = 'BI_DFS'
+        buttons[10]['action'] = 'bi_dfs'
+
+        buttons[11]['label'] = 'Clear_Sol'
+        buttons[11]['action'] = 'clear_sol'
+
+
+        for button in buttons:
+            if button['label'] == 'Save':
+                if button['hover'] == True:
+                    button_color = (255,0,0)
+                else:
+                    button_color = (255, 255, 255)
+            if button['label'] == 'Load':
+              button_color = (255, 255, 255)
+            if button['label'] == 'Random':
+              button_color = (255, 255, 255)
+            if button['label'] == 'Wipe':
+              button_color = (255, 255, 255)
+            if button['label'] == 'DFS':
+              button_color = (255, 255, 255)
+            if button['label'] == 'BFS':
+              button_color = (255, 255, 255)
+            if button['label'] == 'GRD_L1':
+              button_color = (255, 255, 255)
+            if button['label'] == 'GRD_L2':
+              button_color = (255, 255, 255)
+            if button['label'] == 'AST_L1':
+              button_color = (255, 255, 255)
+            if button['label'] == 'AST_L2':
+              button_color = (255, 255, 255)
+            if button['label'] == 'BI_DFS':
+              button_color = (255, 255, 255)
+            if button['label'] == 'Clear_Sol':
+                button_color = (255, 255, 255)
+
+            pygame.draw.rect(surface, button_color, (*button['pos'], button_width, button_height))
+            text = font.render(button['label'], True, (0, 0, 0))
+            text_rect = text.get_rect(center=(button['pos'][0] + button_width // 2, button['pos'][1] + button_height // 2))
+            surface.blit(text, text_rect)
+
+        pygame.display.update()
+
+
+    def handle_button_click(pos, width, height):
+        button_height = 40
+        button_width = 120
+        padding = 10
+        button_rows = 3
+        button_cols = 4
+        total_button_width = button_cols * button_width
+        total_space = width - total_button_width
+        padding = total_space // (button_cols + 1)
+
+        buttons = []
+        
+        extra_padding = 20
+
+        for i in range(button_rows):
+            for j in range(button_cols):
+                x = padding + j * (button_width + padding)
+                y = padding - 30 + i * (button_height + 10)
+                button_label = f"Button {i * button_cols + j + 1}"
+                button_action = f"button_{i * button_cols + j + 1}"
+                buttons.append({'label': button_label, 'pos': (x, y), 'action': button_action})
+
+        buttons[0]['label'] = 'Save'
+        buttons[0]['action'] = 'save'
+
+        buttons[1]['label'] = 'Load'
+        buttons[1]['action'] = 'load'
+
+        buttons[2]['label'] = 'Random'
+        buttons[2]['action'] = 'random'
+
+        buttons[3]['label'] = 'Wipe'
+        buttons[3]['action'] = 'wipe'
+
+        buttons[4]['label'] = 'DFS'
+        buttons[4]['action'] = 'dfs'
+
+        buttons[5]['label'] = 'BFS'
+        buttons[5]['action'] = 'bfs'
+
+        buttons[6]['label'] = 'GRD_L1'
+        buttons[6]['action'] = 'grd_l1'
+
+        buttons[7]['label'] = 'GRD_L2'
+        buttons[7]['action'] = 'grd_l2'
+
+        buttons[8]['label'] = 'AST_L1'
+        buttons[8]['action'] = 'ast_l1'
+
+        buttons[9]['label'] = 'AST_L2'
+        buttons[9]['action'] = 'ast_l2'
+
+        buttons[10]['label'] = 'BI_DFS'
+        buttons[10]['action'] = 'bi_dfs'
+
+        buttons[11]['label'] = 'Clear_Sol'
+        buttons[11]['action'] = 'clear_sol'
+
+        if pos[1] < width:
+            return None
+
+        for button in buttons:
+            if button['pos'][0] <= pos[0] <= button['pos'][0] + button_width and \
+            button['pos'][1] <= pos[1] - width <= button['pos'][1] + button_height:
+                button['hover'] = True
+                return button['action']
+            else:
+                button['hover'] = False
+        return None
+
+
+
     while run:
-        
         draw(win, grid, ROWS, width)
-        
+        buttons_surface = pygame.Surface((width, height-width))
+        draw_buttons(buttons_surface,height)
+        win.blit(buttons_surface,(0,width))
+
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 run = False
 
             if pygame.mouse.get_pressed()[0]:
                 pos = pygame.mouse.get_pos()
-                row, col = get_clicked_pos(pos, ROWS, width)
-                spot = grid[row][col]
 
-                if not start and spot != end:
-                    start = spot
-                    start.make_start()
+                if pos[1] < width:
+                    row, col = get_clicked_pos(pos, ROWS, width)
+                    spot = grid[row][col]
 
-                elif not end and spot != start:
-                    end = spot
-                    end.make_end()
+                    if not start and spot != end:
+                        start = spot
+                        start.make_start()
 
-                elif spot != end and spot != start:
-                    spot.make_barrier()
+                    elif not end and spot != start:
+                        end = spot
+                        end.make_end()
+
+                    elif spot != end and spot != start:
+                        spot.make_barrier()
 
             elif pygame.mouse.get_pressed()[2]:
                 pos = pygame.mouse.get_pos()
-                row, col = get_clicked_pos(pos, ROWS, width)
-                spot = grid[row][col]
-                spot.reset()
-                if spot == start:
-                    start = None
-                if spot == end:
-                    end = None
+
+                if pos[1] < width:
+                    row, col = get_clicked_pos(pos, ROWS, width)
+                    spot = grid[row][col]
+                    spot.reset()
+                    if spot == start:
+                        start = None
+                    if spot == end:
+                        end = None
+            
             if event.type == pygame.MOUSEBUTTONDOWN:
                 pos = pygame.mouse.get_pos()
-                button_clicked = handle_button_click(pos,width)
-                if button_clicked == 'clear':
-                    clear_grid(grid,start,end)
+                button_clicked = handle_button_click(pos,width,WIDTH)
+                if button_clicked is not None:
+                    if button_clicked == 'save':
+                            save_maze(grid)
+                    if button_clicked == 'load':
+                            start, end, grid = load_maze(grid)
+                    if button_clicked == 'random':
+                            start, end, grid = generate_random_maze(ROWS, width)
+                    if button_clicked == 'wipe':
+                        start = None
+                        end = None
+                        grid = make_grid(ROWS, width)
+                    if button_clicked == 'dfs' and start and end:
+                        for row in grid:
+                            for spot in row:
+                                spot.update_neighbors(grid)
+                        DFS(lambda: draw(win, grid, ROWS, width),
+                                grid, start, end)
+                    if button_clicked == 'bfs' and start and end:
+                        for row in grid:
+                            for spot in row:
+                                spot.update_neighbors(grid)
+                        BFS(lambda: draw(win, grid, ROWS, width),
+                                grid, start, end)
+                    if button_clicked == 'grd_l1' and start and end:
+                        for row in grid:
+                            for spot in row:
+                                spot.update_neighbors(grid)
+                        GRD_L1(lambda: draw(win, grid, ROWS, width),
+                                grid, start, end)
+                    if button_clicked == 'grd_l2' and start and end:
+                        for row in grid:
+                            for spot in row:
+                                spot.update_neighbors(grid)
+                        GRD_L2(lambda: draw(win, grid, ROWS, width),
+                                grid, start, end)
+                    if button_clicked == 'ast_l1' and start and end:
+                        for row in grid:
+                            for spot in row:
+                                spot.update_neighbors(grid)
+                        AST_L1(lambda: draw(win, grid, ROWS, width),
+                                grid, start, end)
+                    if button_clicked == 'ast_l2' and start and end:
+                        for row in grid:
+                            for spot in row:
+                                spot.update_neighbors(grid)
+                        AST_L2(lambda: draw(win, grid, ROWS, width),
+                                grid, start, end)
+                    if button_clicked == 'bi_dfs' and start and end:
+                        for row in grid:
+                            for spot in row:
+                                spot.update_neighbors(grid)
+                        BI_DFS(lambda: draw(win, grid, ROWS, width),
+                                grid, start, end)
+                    if button_clicked == 'clear_sol' and start and end:
+                        clear_grid(grid,start,end)
+
             if event.type == pygame.KEYDOWN:
+
                 if event.key == pygame.K_r:
                     start, end, grid = generate_random_maze(ROWS, width)
+                
                 if event.key == pygame.K_1 and start and end:
                     for row in grid:
                         for spot in row:
                             spot.update_neighbors(grid)
                     DFS(lambda: draw(win, grid, ROWS, width),
                               grid, start, end)
+                
                 if event.key == pygame.K_2 and start and end:
                     for row in grid:
                         for spot in row:
                             spot.update_neighbors(grid)
                     BFS(lambda: draw(win, grid, ROWS, width),
                               grid, start, end)
+                
                 if event.key == pygame.K_3 and start and end:
                     for row in grid:
                         for spot in row:
                             spot.update_neighbors(grid)
                     GRD_L1(lambda: draw(win, grid, ROWS, width),
                               grid, start, end)
+                
                 if event.key == pygame.K_4 and start and end:
                     for row in grid:
                         for spot in row:
                             spot.update_neighbors(grid)
                     GRD_L2(lambda: draw(win, grid, ROWS, width),
                               grid, start, end)
+                
                 if event.key == pygame.K_5 and start and end:
                     for row in grid:
                         for spot in row:
                             spot.update_neighbors(grid)
                     AST_L1(lambda: draw(win, grid, ROWS, width),
                               grid, start, end)
+                
                 if event.key == pygame.K_6 and start and end:
                     for row in grid:
                         for spot in row:
                             spot.update_neighbors(grid)
                     AST_L2(lambda: draw(win, grid, ROWS, width),
                               grid, start, end)                  
+                
                 if event.key == pygame.K_7 and start and end:
                     for row in grid:
                         for spot in row:
@@ -749,9 +990,11 @@ def main(win, width):
                         start = None
                         end = None
                         grid = make_grid(ROWS, width)
+                
                 if event.key == pygame.K_s:
                     save_maze(grid)
+                
                 if event.key == pygame.K_l:
                     start, end, grid = load_maze(grid)
     pygame.display.update()
-main(WIN, WIDTH)
+main(WIN, WIDTH, HEIGHT)
