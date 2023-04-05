@@ -660,8 +660,8 @@ def main(win, width, height):
     def draw_buttons(surface, height):
         button_height = 40
         button_width = 120
-        button_rows = 3
-        button_cols = 4
+        button_rows = 4
+        button_cols = 3
         button_color = (0,0,0)
         border_color = (255,255,255)
         border_width = 2
@@ -679,7 +679,7 @@ def main(win, width, height):
         for i in range(button_rows):
             for j in range(button_cols):
                 x = padding + j * (button_width + padding)
-                y = padding - 30 + i * (button_height + 10)
+                y = padding - 100 + i * (button_height + 10)
                 button_label = f"Button {i * button_cols + j + 1}"
                 button_action = f"button_{i * button_cols + j + 1}"
                 
@@ -688,89 +688,89 @@ def main(win, width, height):
         buttons[0]['label'] = 'SAVE'
         buttons[0]['action'] = 'save'
 
-        buttons[1]['label'] = 'LOAD'
-        buttons[1]['action'] = 'load'
+        buttons[1]['label'] = 'DFS'
+        buttons[1]['action'] = 'dfs'
 
-        buttons[2]['label'] = 'RANDOM'
-        buttons[2]['action'] = 'random'
+        buttons[2]['label'] = 'BFS'
+        buttons[2]['action'] = 'bfs'
 
-        buttons[3]['label'] = 'CLEAR_SOL'
-        buttons[3]['action'] = 'clear_sol'
+        buttons[3]['label'] = 'LOAD'
+        buttons[3]['action'] = 'load'
 
-        buttons[4]['label'] = 'DFS'
-        buttons[4]['action'] = 'dfs'
+        buttons[4]['label'] = 'GRD_L1'
+        buttons[4]['action'] = 'grd_l1'
 
-        buttons[5]['label'] = 'BFS'
-        buttons[5]['action'] = 'bfs'
+        buttons[5]['label'] = 'GRD_L2'
+        buttons[5]['action'] = 'grd_l2'
 
-        buttons[6]['label'] = 'GRD_L1'
-        buttons[6]['action'] = 'grd_l1'
+        buttons[6]['label'] = 'RANDOM'
+        buttons[6]['action'] = 'random'
 
-        buttons[7]['label'] = 'GRD_L2'
-        buttons[7]['action'] = 'grd_l2'
+        buttons[7]['label'] = 'AST_L1'
+        buttons[7]['action'] = 'ast_l1'
 
-        buttons[8]['label'] = 'AST_L1'
-        buttons[8]['action'] = 'ast_l1'
+        buttons[8]['label'] = 'AST_L2'
+        buttons[8]['action'] = 'ast_l2'
 
-        buttons[9]['label'] = 'AST_L2'
-        buttons[9]['action'] = 'ast_l2'
+        buttons[9]['label'] = 'WIPE'
+        buttons[9]['action'] = 'wipe'
 
         buttons[10]['label'] = 'BI_DFS'
         buttons[10]['action'] = 'bi_dfs'
 
-        buttons[11]['label'] = 'WIPE'
-        buttons[11]['action'] = 'wipe'
+        buttons[11]['label'] = 'CLEAR_SOL'
+        buttons[11]['action'] = 'clear_sol'
 
 
         for button in buttons:
             if button['label'] == 'SAVE':
                 button_color = (0, 0, 0)
                 text = font.render(button['label'], True, (255, 255, 255))
-                border_color = (0,0,0)
+                border_color = (255, 255, 255)
             if button['label'] == 'LOAD':
                 button_color = (0, 0, 0)
                 text = font.render(button['label'], True, (255, 255, 255))
-                border_color = (0,0,0)
+                border_color = (255, 255, 255)
             if button['label'] == 'RANDOM':
                 button_color = (0, 0, 0)
                 text = font.render(button['label'], True, (255, 255, 255))
-                border_color = (0,0,0)
+                border_color = (255, 255, 255)
             if button['label'] == 'WIPE':
                 button_color = (0, 0, 0)
-                text = font.render(button['label'], True, (255, 255, 0))
-                border_color = (0,0,0)
+                text = font.render(button['label'], True, (255, 0, 0))
+                border_color = (255, 0, 0)
             if button['label'] == 'DFS':
                 button_color = (0, 0, 0)
                 text = font.render(button['label'], True, (230, 115, 115))
-                border_color = (0, 0, 0)
+                border_color = (230, 115, 115)
             if button['label'] == 'BFS':
                 button_color = (0, 0, 0)
                 text = font.render(button['label'], True, (115, 171, 230))
-                border_color = (0, 0, 0)
+                border_color = (115, 171, 230)
             if button['label'] == 'GRD_L1':
                 button_color = (0, 0, 0)
                 text = font.render(button['label'], True, (153, 230, 115))
-                border_color = (0, 0, 0)
+                border_color = (153, 230, 115)
             if button['label'] == 'GRD_L2':
                 button_color = (0, 0, 0)
                 text = font.render(button['label'], True, (153, 230, 115))
-                border_color = (0, 0, 0)
+                border_color = (153, 230, 115)
             if button['label'] == 'AST_L1':
                 button_color = (0, 0, 0)
                 text = font.render(button['label'], True, (230, 201, 115))
-                border_color = (0, 0, 0)
+                border_color = (230, 201, 115)
             if button['label'] == 'AST_L2':
                 button_color = (0, 0, 0)
                 text = font.render(button['label'], True, (230, 201, 115))
-                border_color = (0, 0, 0)
+                border_color = (230, 201, 115)
             if button['label'] == 'BI_DFS':
                 button_color = (0, 0, 0)
                 text = font.render(button['label'], True, (192, 115, 230))
-                border_color = (0, 0, 0)
+                border_color = (192, 115, 230)
             if button['label'] == 'CLEAR_SOL':
-                button_color = (0,0,0)
+                button_color = (0, 0, 0)
                 text = font.render(button['label'], True, (255, 255, 255))
-                border_color = (0,0,0)
+                border_color = (0, 0, 0)
 
             button_rect = pygame.Rect(button['pos'], (button_width, button_height))
             pygame.draw.rect(surface, border_color, button_rect, border_width)
@@ -784,8 +784,8 @@ def main(win, width, height):
         button_height = 40
         button_width = 120
         padding = 10
-        button_rows = 3
-        button_cols = 4
+        button_rows = 4
+        button_cols = 3
         total_button_width = button_cols * button_width
         total_space = width - total_button_width
         padding = total_space // (button_cols + 1)
@@ -797,46 +797,46 @@ def main(win, width, height):
         for i in range(button_rows):
             for j in range(button_cols):
                 x = padding + j * (button_width + padding)
-                y = padding - 30 + i * (button_height + 10)
+                y = padding - 100 + i * (button_height + 10)
                 button_label = f"Button {i * button_cols + j + 1}"
                 button_action = f"button_{i * button_cols + j + 1}"
                 buttons.append({'label': button_label, 'pos': (x, y), 'action': button_action})
 
-        buttons[0]['label'] = 'Save'
+        buttons[0]['label'] = 'SAVE'
         buttons[0]['action'] = 'save'
 
-        buttons[1]['label'] = 'Load'
-        buttons[1]['action'] = 'load'
+        buttons[1]['label'] = 'DFS'
+        buttons[1]['action'] = 'dfs'
 
-        buttons[2]['label'] = 'Random'
-        buttons[2]['action'] = 'random'
+        buttons[2]['label'] = 'BFS'
+        buttons[2]['action'] = 'bfs'
 
-        buttons[3]['label'] = 'CLEAR_SOL'
-        buttons[3]['action'] = 'clear_sol'
+        buttons[3]['label'] = 'LOAD'
+        buttons[3]['action'] = 'load'
 
-        buttons[4]['label'] = 'DFS'
-        buttons[4]['action'] = 'dfs'
+        buttons[4]['label'] = 'GRD_L1'
+        buttons[4]['action'] = 'grd_l1'
 
-        buttons[5]['label'] = 'BFS'
-        buttons[5]['action'] = 'bfs'
+        buttons[5]['label'] = 'GRD_L2'
+        buttons[5]['action'] = 'grd_l2'
 
-        buttons[6]['label'] = 'GRD_L1'
-        buttons[6]['action'] = 'grd_l1'
+        buttons[6]['label'] = 'RANDOM'
+        buttons[6]['action'] = 'random'
 
-        buttons[7]['label'] = 'GRD_L2'
-        buttons[7]['action'] = 'grd_l2'
+        buttons[7]['label'] = 'AST_L1'
+        buttons[7]['action'] = 'ast_l1'
 
-        buttons[8]['label'] = 'AST_L1'
-        buttons[8]['action'] = 'ast_l1'
+        buttons[8]['label'] = 'AST_L2'
+        buttons[8]['action'] = 'ast_l2'
 
-        buttons[9]['label'] = 'AST_L2'
-        buttons[9]['action'] = 'ast_l2'
+        buttons[9]['label'] = 'WIPE'
+        buttons[9]['action'] = 'wipe'
 
         buttons[10]['label'] = 'BI_DFS'
         buttons[10]['action'] = 'bi_dfs'
 
-        buttons[11]['label'] = 'WIPE'
-        buttons[11]['action'] = 'wipe'
+        buttons[11]['label'] = 'CLEAR_SOL'
+        buttons[11]['action'] = 'clear_sol'
 
         if pos[1] < width:
             return None
