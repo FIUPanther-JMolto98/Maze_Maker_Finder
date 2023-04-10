@@ -893,7 +893,6 @@ def main(win, width, height):
         buttons[11]['label'] = 'CLEAR_SOL'
         buttons[11]['action'] = 'clear_sol'
 
-                                    #### ADJUST TEXT COLORS (SEE MENU PIC ON PHONE)**** ##########
         for button in buttons:
 
             if button['label'] == 'SAVE':
@@ -1097,6 +1096,7 @@ def main(win, width, height):
                 button['hover'] = False
         return None
 
+    
     MOUSE_HOVER = pygame.USEREVENT + 1  # custom UserEvent
 
     while run:
