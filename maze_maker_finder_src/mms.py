@@ -35,24 +35,46 @@ DARK_GREY = (104, 104, 104)
 TURQUOISE = (64, 224, 208)
 
 def menu():
-    menu_font = pygame.font.SysFont('Impact', 60)
-    menu_text = menu_font.render('Maze Maker Solver', True, WHITE)
-    start_text = menu_font.render('Start Game', True, WHITE)
-    quit_text = menu_font.render('Quit Game', True, WHITE)
+    background_image = pygame.image.load('background.png')
+    background_image = pygame.transform.scale(background_image, (WIDTH, HEIGHT))
+    menu_font = pygame.font.SysFont('Impact', 100)
+    menu_text = menu_font.render('Maze Maker Solver', True, BLACK)
 
+    menu_text_rect = menu_text.get_rect(center=(WIDTH // 2, HEIGHT // 4))
 
-    menu_text_rect = menu_text.get_rect(center=(WIDTH//2, HEIGHT//4))
-    start_text_rect = start_text.get_rect(center=(WIDTH//2, HEIGHT//2))
-    quit_text_rect = quit_text.get_rect(center=(WIDTH//2, HEIGHT*3//4))
+    button_font = pygame.font.SysFont('Impact', 100)
+    button_width, button_height = 500, 100
+    button_x = (WIDTH - button_width) // 2
 
+    buttons = [
+        {'label': 'Start Game', 'pos': (button_x, HEIGHT // 2), 'action': 'start'},
+        {'label': 'Quit Game', 'pos': (button_x, HEIGHT * 3 // 4), 'action': 'quit'}
+    ]
+
+    for button in buttons:
+        button['rect'] = pygame.Rect(button['pos'], (button_width, button_height))
 
     menu_window = pygame.display.set_mode((WIDTH, HEIGHT))
 
     while True:
-        menu_window.fill(BLACK)
+        menu_window.blit(background_image,(0,0))
         menu_window.blit(menu_text, menu_text_rect)
-        menu_window.blit(start_text, start_text_rect)
-        menu_window.blit(quit_text, quit_text_rect)
+
+        mouse_pos = pygame.mouse.get_pos()
+
+        for button in buttons:
+            button['hover'] = button['rect'].collidepoint(mouse_pos)
+
+            if button['hover']:
+                font_color = (125, 125, 125)
+            else:
+                font_color = (0, 0, 0)
+
+            text = button_font.render(button['label'], True, font_color)
+            # pygame.draw.rect(menu_window, border_color, button['rect'], 5)
+            text_rect = text.get_rect(center=button['rect'].center)
+            menu_window.blit(text, text_rect)
+
         pygame.display.update()
 
         for event in pygame.event.get():
@@ -60,12 +82,13 @@ def menu():
                 pygame.quit()
                 quit()
             elif event.type == pygame.MOUSEBUTTONDOWN:
-                mouse_pos = pygame.mouse.get_pos()
-                if start_text_rect.collidepoint(mouse_pos):
-                    return
-                elif quit_text_rect.collidepoint(mouse_pos):
-                    pygame.quit()
-                    quit()
+                for button in buttons:
+                    if button['hover']:
+                        if button['action'] == 'start':
+                            return
+                        elif button['action'] == 'quit':
+                            pygame.quit()
+                            quit()
 
 menu()
 
@@ -641,12 +664,12 @@ def clear_solution_path(grid, start, end):
 #     clear_text_rect = clear_text.get_rect(center=clear_button_rect.center)
 #     win.blit(clear_text, clear_text_rect)
 
-def handle_button_click(pos,width):
-    x, y = pos
-    if y > width + 20 and y < width + 60:
-        if x > 20 and x < 120:
-            return 'clear'
-    return None
+# def handle_button_click(pos,width):
+#     x, y = pos
+#     if y > width + 20 and y < width + 60:
+#         if x > 20 and x < 120:
+#             return 'clear'
+#     return None
 
 def main(win, width, height):
     ROWS = 50
@@ -658,12 +681,14 @@ def main(win, width, height):
     started = False
 
     def draw_buttons(surface, height):
+        mouse_pos = (pygame.mouse.get_pos()[0], pygame.mouse.get_pos()[1] - width)
         button_height = 40
         button_width = 120
         button_rows = 4
         button_cols = 3
-        button_color = (0,0,0)
         border_color = (255,255,255)
+        button_color = (0,0,0)
+        font_color = (255, 255, 255)
         border_width = 2
 
         total_button_width = button_cols * button_width
@@ -721,64 +746,57 @@ def main(win, width, height):
         buttons[11]['label'] = 'CLEAR_SOL'
         buttons[11]['action'] = 'clear_sol'
 
+        default_colors = {
+            'SAVE': {'border': (255, 255, 255), 'button': (0, 0, 0), 'font': (255, 255, 255)},
+            'LOAD': {'border': (255, 255, 255), 'button': (0, 0, 0), 'font': (255, 255, 255)},
+            'RANDOM': {'border': (255, 255, 255), 'button': (0, 0, 0), 'font': (255, 255, 255)},
+            'WIPE': {'border': (255, 0, 0), 'button': (0, 0, 0), 'font': (255, 0, 0)},
+            'DFS': {'border': (230, 115, 115), 'button': (0, 0, 0), 'font': (230, 115, 115)},
+            'BFS': {'border': (115, 171, 230), 'button': (0, 0, 0), 'font': (115, 171, 230)},
+            'GRD_L1': {'border': (153, 230, 115), 'button': (0, 0, 0), 'font': (153, 230, 115)},
+            'GRD_L2': {'border': (153, 230, 115), 'button': (0, 0, 0), 'font': (153, 230, 115)},
+            'AST_L1': {'border': (230, 201, 115), 'button': (0, 0, 0), 'font': (230, 201, 115)},
+            'AST_L2': {'border': (230, 201, 115), 'button': (0, 0, 0), 'font': (230, 201, 115)},
+            'BI_DFS': {'border': (192, 115, 230), 'button': (0, 0, 0), 'font': (192, 115, 230)},
+            'CLEAR_SOL': {'border': (0, 0, 0), 'button': (0, 0, 0), 'font': (255, 255, 0)}
+        }
+        
+        hover_colors = {
+            'SAVE': {'border': (255, 255, 255), 'button': (255, 255, 255), 'font': (0, 0, 0)},
+            'LOAD': {'border': (255, 255, 255), 'button': (255, 255, 255), 'font': (0, 0, 0)},
+            'RANDOM': {'border': (255, 255, 255), 'button': (255, 255, 255), 'font': (0, 0, 0)},
+            'WIPE': {'border': (255, 0, 0), 'button': (255, 0, 0), 'font': (255, 255, 255)},
+            'DFS': {'border': (230, 115, 115), 'button': (230, 115, 115), 'font': (255, 255, 255)},
+            'BFS': {'border': (115, 171, 230), 'button': (115, 171, 230), 'font': (255, 255, 255)},
+            'GRD_L1': {'border': (153, 230, 115), 'button': (153, 230, 115), 'font': (255, 255, 255)},
+            'GRD_L2': {'border': (153, 230, 115), 'button': (153, 230, 115), 'font': (255, 255, 255)},
+            'AST_L1': {'border': (230, 201, 115), 'button': (230, 201, 115), 'font': (255, 255, 255)},
+            'AST_L2': {'border': (230, 201, 115), 'button': (230, 201, 115), 'font': (255, 255, 255)},
+            'BI_DFS': {'border': (192, 115, 230), 'button': (192, 115, 230), 'font': (255, 255, 255)},
+            'CLEAR_SOL': {'border': (255, 255, 0), 'button': (255, 255, 0), 'font': (0, 0, 0)}
+        }
+
 
         for button in buttons:
-            if button['label'] == 'SAVE':
-                button_color = (0, 0, 0)
-                text = font.render(button['label'], True, (255, 255, 255))
-                border_color = (255, 255, 255)
-            if button['label'] == 'LOAD':
-                button_color = (0, 0, 0)
-                text = font.render(button['label'], True, (255, 255, 255))
-                border_color = (255, 255, 255)
-            if button['label'] == 'RANDOM':
-                button_color = (0, 0, 0)
-                text = font.render(button['label'], True, (255, 255, 255))
-                border_color = (255, 255, 255)
-            if button['label'] == 'WIPE':
-                button_color = (0, 0, 0)
-                text = font.render(button['label'], True, (255, 0, 0))
-                border_color = (255, 0, 0)
-            if button['label'] == 'DFS':
-                button_color = (0, 0, 0)
-                text = font.render(button['label'], True, (230, 115, 115))
-                border_color = (230, 115, 115)
-            if button['label'] == 'BFS':
-                button_color = (0, 0, 0)
-                text = font.render(button['label'], True, (115, 171, 230))
-                border_color = (115, 171, 230)
-            if button['label'] == 'GRD_L1':
-                button_color = (0, 0, 0)
-                text = font.render(button['label'], True, (153, 230, 115))
-                border_color = (153, 230, 115)
-            if button['label'] == 'GRD_L2':
-                button_color = (0, 0, 0)
-                text = font.render(button['label'], True, (153, 230, 115))
-                border_color = (153, 230, 115)
-            if button['label'] == 'AST_L1':
-                button_color = (0, 0, 0)
-                text = font.render(button['label'], True, (230, 201, 115))
-                border_color = (230, 201, 115)
-            if button['label'] == 'AST_L2':
-                button_color = (0, 0, 0)
-                text = font.render(button['label'], True, (230, 201, 115))
-                border_color = (230, 201, 115)
-            if button['label'] == 'BI_DFS':
-                button_color = (0, 0, 0)
-                text = font.render(button['label'], True, (192, 115, 230))
-                border_color = (192, 115, 230)
-            if button['label'] == 'CLEAR_SOL':
-                button_color = (0, 0, 0)
-                text = font.render(button['label'], True, (255, 255, 0))
-                border_color = (0, 0, 0)
-
             button_rect = pygame.Rect(button['pos'], (button_width, button_height))
+            button['hover'] = button_rect.collidepoint(mouse_pos)
+            
+            if button['hover']:
+                border_color = hover_colors[button['label']]['border']
+                button_color = hover_colors[button['label']]['button']
+                font_color = hover_colors[button['label']]['font']
+            else:
+                border_color = default_colors[button['label']]['border']
+                button_color = default_colors[button['label']]['button']
+                font_color = default_colors[button['label']]['font']
+
+            text = font.render(button['label'], True, font_color)
             pygame.draw.rect(surface, border_color, button_rect, border_width)
+            fill_rect = pygame.Rect(button['pos'][0] + border_width, button['pos'][1] + border_width,
+                                button_width - 2 * border_width, button_height - 2 * border_width)
+            pygame.draw.rect(surface, button_color, fill_rect)
             text_rect = text.get_rect(center=(button['pos'][0] + button_width // 2, button['pos'][1] + button_height // 2))
             surface.blit(text, text_rect)
-
-        pygame.display.update()
-
 
     def handle_button_click(pos, width, height):
         button_height = 40
@@ -844,13 +862,8 @@ def main(win, width, height):
         for button in buttons:
             if button['pos'][0] <= pos[0] <= button['pos'][0] + button_width and \
             button['pos'][1] <= pos[1] - width <= button['pos'][1] + button_height:
-                button['hover'] = True
                 return button['action']
-            else:
-                button['hover'] = False
         return None
-
-
 
     while run:
         draw(win, grid, ROWS, width)
@@ -1020,5 +1033,5 @@ def main(win, width, height):
                 
                 if event.key == pygame.K_l:
                     start, end, grid = load_maze(grid)
-    pygame.display.update()
+        pygame.display.update()
 main(WIN, WIDTH, HEIGHT)
