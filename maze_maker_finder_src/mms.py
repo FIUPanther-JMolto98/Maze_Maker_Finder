@@ -34,46 +34,149 @@ GREY = (128, 128, 128)
 DARK_GREY = (104, 104, 104)
 TURQUOISE = (64, 224, 208)
 
-def menu():
-    background_image = pygame.image.load('background.png')
-    background_image = pygame.transform.scale(background_image, (WIDTH, HEIGHT))
-    menu_font = pygame.font.SysFont('Impact', 100)
-    menu_text = menu_font.render('Maze Maker Solver', True, BLACK)
+def instructions():
+    menu_window = pygame.display.set_mode((WIDTH, WIDTH))
+    instructions_heading = pygame.font.SysFont('Impact', 30)
+    instructions_font = pygame.font.SysFont('Calibri', 30)
+    instructions_text1 = instructions_heading.render('INSTRUCTIONS:', True, (245,188,66))
+    instructions_text2 = instructions_font.render('Step 1: Choose Start Point.', True, (230, 115, 115))
+    instructions_text3 = instructions_font.render('Step 2: Choose End Point.', True, (115, 171, 230))
+    instructions_text4 = instructions_font.render('Step 3: Construct Maze.', True, WHITE)
+    instructions_text5 = instructions_heading.render('KEYBOARD CONTROLS:', True, (245,188,66))
+    instructions_text6 = instructions_font.render('Press 1: To Apply DFS', True,(230, 115, 115))
+    instructions_text7 = instructions_font.render('Press 2: To Apply BFS', True,(115, 171, 230))
+    instructions_text8 = instructions_font.render('Press 3: To Apply GRD L1 Norm', True,(153, 230, 115))
+    instructions_text9 = instructions_font.render('Press 4: To Apply GRD L2 Norm', True,(153, 230, 115))
+    instructions_text10 = instructions_font.render('Press 5: To Apply A* L1 Norm', True,(230, 201, 115))
+    instructions_text11 = instructions_font.render('Press 6: To Apply A* L2 Norm', True,(230, 201, 115))
+    instructions_text12 = instructions_font.render('Press 7: To Apply BI_DFS', True,(192, 115, 230))
+    instructions_text13 = instructions_font.render('Press S: Save Current Maze to TXT File', True, WHITE)
+    instructions_text14 = instructions_font.render('Press L: Load Maze from TXT File', True, WHITE)
+    instructions_text15 = instructions_font.render('Press R: Generate Random Maze', True, WHITE)
+    instructions_text16 = instructions_font.render('Press E: Wipe Screen Clean', True,WHITE)
+    instructions_text17 = instructions_font.render('Press C: Clear Solution Visuals (Once Found)', True, WHITE)
 
-    menu_text_rect = menu_text.get_rect(center=(WIDTH // 2, HEIGHT // 4))
+ 
+    instructions_surface = pygame.Surface((WIDTH, WIDTH))
+    instructions_surface = pygame.image.load("background_inverted.png")
+    instructions_surface = pygame.transform.scale(instructions_surface, (WIDTH, WIDTH))
+    instructions_rect = instructions_surface.get_rect()
 
-    button_font = pygame.font.SysFont('Impact', 100)
-    button_width, button_height = 500, 100
-    button_x = (WIDTH - button_width) // 2
+    instructions_surface.blit(instructions_text1, (50, 50))
+    instructions_surface.blit(instructions_text2, (50, 100))
+    instructions_surface.blit(instructions_text3, (50, 125))
+    instructions_surface.blit(instructions_text4, (50, 150))
+    instructions_surface.blit(instructions_text5, (50, 250))
+    instructions_surface.blit(instructions_text6, (50, 300))
+    instructions_surface.blit(instructions_text7, (50, 325))
+    instructions_surface.blit(instructions_text8, (50, 350))
+    instructions_surface.blit(instructions_text9, (50, 375))
+    instructions_surface.blit(instructions_text10, (50, 400))
+    instructions_surface.blit(instructions_text11, (50, 425))    
+    instructions_surface.blit(instructions_text12, (50, 450))    
+    instructions_surface.blit(instructions_text13, (50, 500))    
+    instructions_surface.blit(instructions_text14, (50, 525))    
+    instructions_surface.blit(instructions_text15, (50, 550))    
+    instructions_surface.blit(instructions_text16, (50, 575))    
+    instructions_surface.blit(instructions_text17, (50, 600))    
 
-    buttons = [
-        {'label': 'Start Game', 'pos': (button_x, HEIGHT // 2), 'action': 'start'},
-        {'label': 'Quit Game', 'pos': (button_x, HEIGHT * 3 // 4), 'action': 'quit'}
-    ]
-
-    for button in buttons:
-        button['rect'] = pygame.Rect(button['pos'], (button_width, button_height))
-
-    menu_window = pygame.display.set_mode((WIDTH, HEIGHT))
-
+    back_button_font = pygame.font.SysFont('Impact', 30)
+    back_button = pygame.Surface((800, 150))
+    back_button.fill(WHITE)
+    back_button_text = back_button_font.render('BACK', True, WHITE)
+    back_button_rect = back_button_text.get_rect(center=(WIDTH//2, WIDTH - 50))
+    
     while True:
-        menu_window.blit(background_image,(0,0))
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                quit()
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if back_button_rect.collidepoint(event.pos):
+                    return
+
+        
+        menu_window.blit(back_button, (WIDTH//2 - back_button.get_width()//2, WIDTH -100 - back_button.get_height()))
+        menu_window.blit(back_button_text, back_button_rect.move(WIDTH//2 - back_button_text.get_width()//2, WIDTH -100 - back_button.get_height()))
+
+        if back_button_rect.collidepoint(pygame.mouse.get_pos()):
+            back_button_text = back_button_font.render('BACK', True, RED)
+        else:
+            back_button_text = back_button_font.render('BACK', True, WHITE)
+        
+        menu_window.blit(instructions_surface, (0, 0))
+        menu_window.blit(back_button_text, back_button_rect)
+        pygame.display.update()
+        
+        
+        
+def menu():
+    menu_font = pygame.font.SysFont('Impact', 60)
+    menu_button = pygame.Surface((800, 150))
+    menu_button.fill(WHITE)
+    menu_text = menu_font.render('MAZE MAKER SOLVER', True, BLACK)
+    menu_text_rect = menu_text.get_rect(center=menu_button.get_rect().center)
+    
+    
+    
+    
+    button_font = pygame.font.SysFont('Impact', 50)
+    start_button = pygame.Surface((450, 80))
+    start_button.fill((81,245,66))
+    start_text = button_font.render('START GAME', True, WHITE)
+    start_text_rect = start_text.get_rect(center=start_button.get_rect().center)
+ 
+    
+    
+    
+    quit_button = pygame.Surface((450, 80))
+    quit_button.fill((245,66,66))
+    quit_text = button_font.render('QUIT GAME', True, WHITE)
+    quit_text_rect = quit_text.get_rect(center=quit_button.get_rect().center)
+    menu_text_rect = menu_text.get_rect(center=(WIDTH//2, WIDTH//4))
+    
+    instructions_button = pygame.Surface((450, 60))
+    instructions_button.fill((245,188,66))
+    instructions_text = button_font.render('INSTRUCTIONS', True, WHITE)
+    instructions_text_rect = instructions_text.get_rect(center=instructions_button.get_rect().center)
+
+    
+    menu_window = pygame.display.set_mode((WIDTH, WIDTH))
+    
+    while True:
+        background_image = pygame.image.load("background.png")
+        background_image = pygame.transform.scale(background_image, (WIDTH, HEIGHT))
+        background_rect = background_image.get_rect()
+        menu_window.blit(background_image, background_rect)
+        menu_window.blit(menu_button, (WIDTH//2 - menu_button.get_width()//2, WIDTH//3  - menu_button.get_height()))
         menu_window.blit(menu_text, menu_text_rect)
 
-        mouse_pos = pygame.mouse.get_pos()
+        menu_window.blit(start_button, (WIDTH//2 - start_button.get_width()//2, WIDTH//1.75 - start_button.get_height()))
+        menu_window.blit(quit_button, (WIDTH//2 - quit_button.get_width()//2, WIDTH*3//3.75 - quit_button.get_height()))
+        menu_window.blit(start_text, start_text_rect.move(WIDTH//2 - start_button.get_width()//2, WIDTH//1.75 - start_button.get_height()))
+        menu_window.blit(quit_text, quit_text_rect.move(WIDTH//2 - quit_button.get_width()//2, WIDTH*3//3.75 - quit_button.get_height()))
+        menu_window.blit(instructions_button, (WIDTH//2 - instructions_button.get_width()//2, WIDTH//13 - instructions_button.get_height()))
+        menu_window.blit(instructions_text, instructions_text_rect.move(WIDTH//2 - instructions_button.get_width()//2, WIDTH //13 - instructions_button.get_height()))
+        
+        start_button_rect = start_text.get_rect(center=(WIDTH//2, WIDTH//1.75 - 50))
+        quit_button_rect = quit_text.get_rect(center=(WIDTH//2, WIDTH*3//3.75 - 50))
+        instructions_button_rect = instructions_text.get_rect(center=(WIDTH//2, WIDTH//13)) ###########################################
 
-        for button in buttons:
-            button['hover'] = button['rect'].collidepoint(mouse_pos)
+        if start_button_rect.collidepoint(pygame.mouse.get_pos()):
+            start_text = button_font.render('START GAME', True, (60,148,40))
+        else:
+            start_text = button_font.render('START GAME', True, WHITE)
 
-            if button['hover']:
-                font_color = (125, 125, 125)
-            else:
-                font_color = (0, 0, 0)
-
-            text = button_font.render(button['label'], True, font_color)
-            # pygame.draw.rect(menu_window, border_color, button['rect'], 5)
-            text_rect = text.get_rect(center=button['rect'].center)
-            menu_window.blit(text, text_rect)
+        if quit_button_rect.collidepoint(pygame.mouse.get_pos()):
+            quit_text = button_font.render('QUIT GAME', True, (148,40,40))
+        else:
+            quit_text = button_font.render('QUIT GAME', True, WHITE)
+                  
+            
+        if instructions_button_rect.collidepoint(pygame.mouse.get_pos()):
+            instructions_text = button_font.render('INSTRUCTIONS', True, (148,107,40))
+        else:
+            instructions_text = button_font.render('INSTRUCTIONS', True, WHITE)
 
         pygame.display.update()
 
@@ -82,14 +185,15 @@ def menu():
                 pygame.quit()
                 quit()
             elif event.type == pygame.MOUSEBUTTONDOWN:
-                for button in buttons:
-                    if button['hover']:
-                        if button['action'] == 'start':
-                            return
-                        elif button['action'] == 'quit':
-                            pygame.quit()
-                            quit()
+                mouse_pos = pygame.mouse.get_pos()
 
+                if start_text_rect.move(WIDTH//2 - start_button.get_width()//2, WIDTH//1.75 - start_button.get_height()).collidepoint(event.pos):
+                    return
+                elif quit_text_rect.move(WIDTH//2 - quit_button.get_width()//2, WIDTH*3//3.75 - quit_button.get_height()).collidepoint(event.pos):
+                    quit()
+                elif instructions_text_rect.move(WIDTH//2 - instructions_button.get_width()//2, WIDTH //12 - instructions_button.get_height()).collidepoint(event.pos): ##################################################
+                    instructions()
+                                          
 menu()
 
 def display_error(win, width, message):
@@ -242,7 +346,6 @@ def reconstruct_path(came_from, current, draw):
         current.make_path()
         draw()
 def reconstruct_path_bi(forward_came_from, backward_came_from, forward_intersection, backward_intersection, draw):
-    # Reconstruct the path from the start node to the forward_intersection point
     current = forward_intersection
     while current in forward_came_from:
         current = forward_came_from[current]
@@ -250,7 +353,6 @@ def reconstruct_path_bi(forward_came_from, backward_came_from, forward_intersect
         current.make_path()
         draw()
 
-    # Reconstruct the path from the end node to the backward_intersection point
     current = backward_intersection
     while current in backward_came_from:
         current = backward_came_from[current]
@@ -258,7 +360,6 @@ def reconstruct_path_bi(forward_came_from, backward_came_from, forward_intersect
         current.make_path()
         draw()
 
-    # Mark the intersection points as part of the solution path
     forward_intersection.is_solution_path = True
     forward_intersection.make_path()
     backward_intersection.is_solution_path = True
@@ -315,7 +416,7 @@ def BI_DFS(draw, grid, start, end):
             for neighbor in direction.neighbors:
                 if neighbor not in visited:
                     if neighbor in other_visited:
-                        # Reconstruct path when the two searches meet
+
                         reconstruct_path_bi(forward_came_from, backward_came_from, direction, neighbor, draw)
                         start.make_start()
                         end.make_end()
@@ -573,7 +674,7 @@ def draw(win, grid, rows, width):
         for spot in row:
             spot.draw(win)
 
-    draw_grid(win, rows, width, width)  # Pass width as the height parameter
+    draw_grid(win, rows, width, width)
     pygame.display.update()
 
 
@@ -656,22 +757,8 @@ def clear_solution_path(grid, start, end):
     end.make_end()
     return start,end,grid
 
-# def draw_buttons(win,width):
-#     button_font = pygame.font.SysFont('arial', 20)
-#     clear_button_rect = pygame.Rect(20, width + 20, 100, 40)
-#     pygame.draw.rect(win, GREY, clear_button_rect, border_radius=5)
-#     clear_text = button_font.render('Clear Grid', True, BLACK)
-#     clear_text_rect = clear_text.get_rect(center=clear_button_rect.center)
-#     win.blit(clear_text, clear_text_rect)
-
-# def handle_button_click(pos,width):
-#     x, y = pos
-#     if y > width + 20 and y < width + 60:
-#         if x > 20 and x < 120:
-#             return 'clear'
-#     return None
-
 def main(win, width, height):
+    pygame.display.set_mode((WIDTH, HEIGHT))
     ROWS = 50
     grid = make_grid(ROWS, width)
 
@@ -868,6 +955,7 @@ def main(win, width, height):
     while run:
         draw(win, grid, ROWS, width)
         buttons_surface = pygame.Surface((width, height-width))
+        buttons_surface = pygame.image.load("background_inverted.png")
         draw_buttons(buttons_surface,height)
         win.blit(buttons_surface,(0,width))
 
