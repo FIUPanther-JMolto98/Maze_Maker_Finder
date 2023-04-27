@@ -1,3 +1,24 @@
+################################################################################
+#==============================================================================#
+#                               README:                                        #
+#==============================================================================#
+# THIS PROGRAM WAS WRITTEN BY TEAM #1 FOR DR. YANZHAO WU's                     #
+# COP4630/5602 INTRO TO AI COURSE AT FLORIDA INTERNATIONAL UNIVERSITY          #
+#==============================================================================#
+#                           TEAM #1 MEMBERS:                                   #
+#==============================================================================#
+# ANTHONY DEVESA            6224283                                            #
+# DAVID MARTINEZ            5698422                                            #
+# JOAQUIN MOLTO (LEADER)    6119985                                            #
+# JOSE REVILLA              6250210                                            #
+# RAHUUL RANGARAJ           6360064                                            #
+#==============================================================================#
+#                       HOW TO RUN THE PROGRAM:                                #
+#==============================================================================#
+# 1) MAKE SURE PYTHON 3 IS INSTALLED IN YOUR COMPUTER.                         #
+# 2) INSTALL THE PYGAME LIBRARY USING PIP                                      #
+################################################################################
+
 from threading import current_thread
 import pygame
 import pygame.freetype
